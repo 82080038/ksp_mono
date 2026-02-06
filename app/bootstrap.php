@@ -20,6 +20,7 @@ if (($config['app']['env'] ?? 'production') === 'development' && ($config['app']
 
 require_once __DIR__ . '/Database.php';
 require_once __DIR__ . '/Auth.php';
+require_once __DIR__ . '/Address.php';
 
 // Helper untuk akses config
 function app_config(string $key, $default = null) {

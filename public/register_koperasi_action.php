@@ -27,13 +27,7 @@ if ($nama === '' || $alamat === '' || $kontak === '' || $province_id <= 0 || $re
 
 try {
     // Validasi alamat di alamat_db (read-only)
-    $cfgAlamat = [
-        'host' => 'localhost',
-        'name' => 'alamat_db',
-        'user' => 'root',
-        'pass' => 'root',
-        'charset' => 'utf8mb4'
-    ];
+    $cfgAlamat = app_config('alamat_db');
     $dsnAlamat = sprintf('mysql:host=%s;dbname=%s;charset=%s', $cfgAlamat['host'], $cfgAlamat['name'], $cfgAlamat['charset']);
     $pdoAlamat = new PDO($dsnAlamat, $cfgAlamat['user'], $cfgAlamat['pass'], [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

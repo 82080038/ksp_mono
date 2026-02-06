@@ -9,8 +9,9 @@ if ($province_id <= 0) {
 }
 
 try {
-    $dsn = 'mysql:host=localhost;dbname=alamat_db;charset=utf8mb4';
-    $pdo = new PDO($dsn, 'root', 'root', [
+    $cfg = app_config('alamat_db');
+    $dsn = sprintf('mysql:host=%s;dbname=%s;charset=%s', $cfg['host'], $cfg['name'], $cfg['charset']);
+    $pdo = new PDO($dsn, $cfg['user'], $cfg['pass'], [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,

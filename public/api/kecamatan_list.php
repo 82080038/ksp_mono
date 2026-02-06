@@ -6,13 +6,7 @@ require_once __DIR__ . '/../../app/bootstrap.php';
 
 try {
     // Pakai koneksi terpisah ke alamat_db (read-only)
-    $cfgAlamat = [
-        'host' => 'localhost',
-        'name' => 'alamat_db',
-        'user' => 'root',
-        'pass' => 'root',
-        'charset' => 'utf8mb4'
-    ];
+    $cfgAlamat = app_config('alamat_db');
     $dsn = sprintf('mysql:host=%s;dbname=%s;charset=%s', $cfgAlamat['host'], $cfgAlamat['name'], $cfgAlamat['charset']);
     $pdoAlamat = new PDO($dsn, $cfgAlamat['user'], $cfgAlamat['pass'], [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

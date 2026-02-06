@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../app/bootstrap.php';
 // List regencies by province (alamat_db, read-only)
 header('Content-Type: application/json');
 
@@ -16,9 +17,10 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,
     ]);
-    $stmt = $pdo->prepare('SELECT id, name AS nama FROM regencies WHERE province_id = :pid ORDER BY name ASC');
-    $stmt->execute([':pid' => $province_id]);
-    echo json_encode(['success' => true, 'data' => $stmt->fetchAll()]);
+    $stmt = $pdo->prepare('SELECT id, name AS nama FROM kabkota WHERE province_id = :province_id ORDER BY name ASC');
+    $stmt->execute([':province_id' => $province_id]);
+    $rows = $stmt->fetchAll();
+    echo json_encode(['success' => true, 'data' => $rows]);
 } catch (Throwable $e) {
     error_log('regencies error: '.$e->getMessage());
     http_response_code(500);

@@ -86,30 +86,71 @@ require_once __DIR__ . '/../app/bootstrap.php';
                                 <label for="koperasiVillageSelect"><i class="bi bi-house-door"></i> Kelurahan/Desa</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-floating" style="max-width:220px;">
-                                <input type="text" class="form-control" name="postal_code" id="koperasiPostalCode" readonly disabled placeholder="Kode Pos">
-                                <label for="koperasiPostalCode"><i class="bi bi-mailbox"></i> Kode Pos</label>
+                        <div class="d-flex flex-wrap gap-3 mt-3 align-items-start">
+                            <div class="flex-fill" style="min-width:240px;">
+                                <div class="form-floating mb-3">
+                                    <textarea class="form-control" name="alamat_lengkap" rows="2" required placeholder="Alamat lengkap"></textarea>
+                                    <label><i class="bi bi-map"></i> Alamat Lengkap</label>
+                                </div>
+                            </div>
+                            <div style="width:90px;">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="postal_code" id="koperasiPostalCode" readonly disabled placeholder="Kode Pos">
+                                    <label for="koperasiPostalCode"><i class="bi bi-mailbox"></i> K. Pos</label>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     
                     <h6 class="text-primary mb-3 mt-4"><i class="bi bi-info-circle-fill"></i> Detail Koperasi</h6>
+                   
+                 
+                   
                     <div class="form-floating mb-3">
-                        <textarea class="form-control" name="alamat_lengkap" rows="2" required placeholder="Alamat lengkap"></textarea>
-                        <label><i class="bi bi-map"></i> Alamat Lengkap</label>
+                        <select class="form-select" name="jenis_koperasi" required>
+                            <option value="">-- Pilih jenis koperasi --</option>
+                            <option value="KSP">Koperasi Simpan Pinjam (KSP)</option>
+                            <option value="KK">Koperasi Konsumsi</option>
+                            <option value="KP">Koperasi Produksi</option>
+                            <option value="KJ">Koperasi Jasa</option>
+                            <option value="KSU">Koperasi Serba Usaha</option>
+                        </select>
+                        <label><i class="bi bi-tag"></i> Jenis Koperasi</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" name="nama_koperasi" required placeholder="Nama Koperasi">
                         <label><i class="bi bi-building"></i> Nama Koperasi</label>
                     </div>
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="kontak" required placeholder="Kontak (Telp/HP)">
-                        <label><i class="bi bi-telephone"></i> Kontak (Telp/HP)</label>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" name="kontak" required placeholder="Kontak (Telp/HP)">
+                                <label><i class="bi bi-telephone"></i> Kontak (Telp/HP)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" name="npwp" placeholder="NPWP (opsional)">
+                                <label><i class="bi bi-receipt"></i> NPWP (opsional)</label>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="npwp" placeholder="NPWP (opsional)">
-                        <label><i class="bi bi-receipt"></i> NPWP (opsional)</label>
+                        <input type="text" class="form-control" name="badan_hukum" placeholder="Badan Hukum">
+                        <label><i class="bi bi-file-text"></i> Badan Hukum</label>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="date" class="form-control" name="tanggal_pendirian">
+                                <label><i class="bi bi-calendar"></i> Tanggal Pendirian</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" name="modal_pokok" step="0.01" placeholder="0.00">
+                                <label><i class="bi bi-cash"></i> Modal Pokok</label>
+                            </div>
+                        </div>
                     </div>
                     <div class="d-grid gap-2 mt-4">
                         <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-check-circle"></i> Daftarkan Koperasi</button>

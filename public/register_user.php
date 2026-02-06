@@ -92,6 +92,14 @@ require_once __DIR__ . '/../app/bootstrap.php';
                         <input type="password" class="form-control" name="password_confirm" required placeholder="Konfirmasi Password">
                         <label><i class="bi bi-lock-fill"></i> Konfirmasi Password</label>
                     </div>
+                    <div class="form-floating mb-3">
+                        <select class="form-select" name="peran_jenis_id" required>
+                            <option value="">-- Pilih peran --</option>
+                            <option value="1">Super Admin</option>
+                            <option value="2">Anggota</option>
+                        </select>
+                        <label><i class="bi bi-shield"></i> Peran</label>
+                    </div>
                     <div class="d-grid gap-2 mt-4">
                         <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-person-add"></i> Daftarkan User</button>
                     </div>

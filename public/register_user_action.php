@@ -19,8 +19,9 @@ $password      = $_POST['password'] ?? '';
 $password_conf = $_POST['password_confirm'] ?? '';
 $user_db_id    = 1; // default, sesuaikan jika ada tabel user_db di coop_db
 $status        = 'active';
+$peran_jenis_id = isset($_POST['peran_jenis_id']) ? (int)$_POST['peran_jenis_id'] : 0;
 
-if ($koperasi_id <= 0 || $nama === '' || $username === '' || $email === '' || $password === '') {
+if ($koperasi_id <= 0 || $nama === '' || $username === '' || $email === '' || $password === '' || $peran_jenis_id <= 0) {
     echo json_encode(['success' => false, 'message' => 'Semua field wajib diisi.']);
     exit;
 }
@@ -53,7 +54,16 @@ try {
         ':status' => $status,
     ]);
 
-    echo json_encode(['success' => true, 'message' => 'User berhasil didaftarkan. Silakan login.', 'redirect' => '/ksp_mono/login.php']);
+    $user_id = $pdo->lastInsertId();
+
+    // assign role
+    $stmtRole = $pdo->prepare('INSERT INTO pengguna_peran (pengguna_id, peran_jenis_id) VALUES (:pengguna_id, :peran_jenis_id)');
+    $stmtRole->execute([
+        ':pengguna_id' => $user_id,
+        ':peran_jenis_id' => $peran_jenis_id,
+    ]);
+
+    echo json_encode(['success' => true, 'message' => 'User berhasil didaftarkan dengan peran yang dipilih. Silakan login.', 'redirect' => '/ksp_mono/login.php']);
 } catch (PDOException $e) {
     error_log('register_user PDO error: ' . $e->getMessage());
     if ($e->getCode() === '23000') {

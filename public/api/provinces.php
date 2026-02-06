@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../app/bootstrap.php';
 // List provinces (alamat_db, read-only)
 header('Content-Type: application/json');
 
@@ -10,7 +11,7 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,
     ]);
-    $rows = $pdo->query('SELECT id, name AS nama FROM provinces ORDER BY name ASC')->fetchAll();
+    $rows = $pdo->query('SELECT id, name AS nama FROM provinsi ORDER BY name ASC')->fetchAll();
     echo json_encode(['success' => true, 'data' => $rows]);
 } catch (Throwable $e) {
     error_log('provinces error: '.$e->getMessage());

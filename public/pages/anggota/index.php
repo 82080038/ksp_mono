@@ -2,6 +2,14 @@
 // Set header untuk response JSON
 header('Content-Type: application/json');
 
+require_once __DIR__ . '/../../../app/bootstrap.php';
+$auth = new Auth();
+if (!$auth->check()) {
+    http_response_code(401);
+    echo json_encode(['status' => 'error', 'message' => 'Unauthorized']);
+    exit;
+}
+
 // Dapatkan parameter action dari URL
 $action = isset($_GET['action']) ? $_GET['action'] : 'list';
 

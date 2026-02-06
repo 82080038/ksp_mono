@@ -1,3 +1,11 @@
+<?php
+require_once __DIR__ . '/../../../app/bootstrap.php';
+$auth = new Auth();
+if (!$auth->check()) {
+    header('Location: /ksp_mono/login.php');
+    exit;
+}
+?>
 <div class="card shadow-sm mb-4">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
         <h5 class="mb-0">Daftar Anggota</h5>

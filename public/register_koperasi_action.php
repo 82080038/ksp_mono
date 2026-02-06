@@ -20,7 +20,12 @@ $regency_id   = isset($_POST['regency_id']) ? (int)$_POST['regency_id'] : 0;
 $district_id  = isset($_POST['district_id']) ? (int)$_POST['district_id'] : 0;
 $village_id   = isset($_POST['village_id']) ? (int)$_POST['village_id'] : 0;
 
-if ($nama === '' || $alamat === '' || $kontak === '' || $province_id <= 0 || $regency_id <= 0 || $district_id <= 0 || $village_id <= 0) {
+$jenis_koperasi = trim($_POST['jenis_koperasi'] ?? '');
+$badan_hukum = trim($_POST['badan_hukum'] ?? '');
+$tanggal_pendirian = trim($_POST['tanggal_pendirian'] ?? '');
+$modal_pokok = isset($_POST['modal_pokok']) ? (float)$_POST['modal_pokok'] : 0.00;
+
+if ($nama === '' || $alamat === '' || $kontak === '' || $province_id <= 0 || $regency_id <= 0 || $district_id <= 0 || $village_id <= 0 || $jenis_koperasi === '') {
     echo json_encode(['success' => false, 'message' => 'Semua field wajib diisi (kecuali NPWP).']);
     exit;
 }
@@ -46,26 +51,26 @@ try {
         return (bool)$stmt->fetch();
     };
 
-    if (!$check('provinces', $province_id)) {
+    if (!$check('provinsi', $province_id)) {
         echo json_encode(['success' => false, 'message' => 'Provinsi tidak valid.']);
         exit;
     }
-    if (!$check('regencies', $regency_id, 'province_id', $province_id)) {
+    if (!$check('kabkota', $regency_id, 'province_id', $province_id)) {
         echo json_encode(['success' => false, 'message' => 'Kabupaten/Kota tidak valid.']);
         exit;
     }
-    if (!$check('districts', $district_id, 'regency_id', $regency_id)) {
+    if (!$check('kecamatan', $district_id, 'regency_id', $regency_id)) {
         echo json_encode(['success' => false, 'message' => 'Kecamatan tidak valid.']);
         exit;
     }
-    if (!$check('villages', $village_id, 'district_id', $district_id)) {
+    if (!$check('kelurahan', $village_id, 'district_id', $district_id)) {
         echo json_encode(['success' => false, 'message' => 'Kelurahan/Desa tidak valid.']);
         exit;
     }
 
     $pdo = Database::conn();
     // coerce fields ke tabel koperasi_tenant (schema coop_db yg sudah di-rename)
-    $stmt = $pdo->prepare("INSERT INTO koperasi_tenant (province_id, regency_id, district_id, village_id, nama, alamat_legal, kontak_resmi, npwp, status_badan_hukum, status_notes, modal_pokok) VALUES (:province_id, :regency_id, :district_id, :village_id, :nama, :alamat, :kontak, :npwp, 'belum_terdaftar', NULL, 0.00)");
+    $stmt = $pdo->prepare("INSERT INTO koperasi_tenant (province_id, regency_id, district_id, village_id, nama, alamat_legal, kontak_resmi, npwp, jenis_koperasi, badan_hukum, tanggal_pendirian, modal_pokok, status_badan_hukum, dibuat_pada, diperbarui_pada) VALUES (:province_id, :regency_id, :district_id, :village_id, :nama, :alamat, :kontak, :npwp, :jenis_koperasi, :badan_hukum, :tanggal_pendirian, :modal_pokok, 'belum_terdaftar', NOW(), NOW())");
     $stmt->execute([
         ':province_id' => $province_id,
         ':regency_id' => $regency_id,
@@ -75,6 +80,10 @@ try {
         ':alamat' => $alamat,
         ':kontak' => $kontak,
         ':npwp' => $npwp ?: null,
+        ':jenis_koperasi' => json_encode($jenis_koperasi),
+        ':badan_hukum' => $badan_hukum ?: null,
+        ':tanggal_pendirian' => $tanggal_pendirian ?: null,
+        ':modal_pokok' => $modal_pokok,
     ]);
     echo json_encode(['success' => true, 'message' => 'Koperasi berhasil didaftarkan. Silakan lanjut registrasi admin/user.']);
 } catch (Throwable $e) {

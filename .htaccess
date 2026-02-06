@@ -1,0 +1,16 @@
+RewriteEngine On
+RewriteBase /ksp_mono
+
+DirectoryIndex public/index.php
+
+# Jangan rewrite jika sudah di public
+RewriteCond %{REQUEST_URI} ^/ksp_mono/public/
+RewriteRule ^ - [L]
+
+# Lewati file atau folder yang ada
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Arahkan sisanya ke folder public
+RewriteRule ^(.*)$ public/$1 [L]

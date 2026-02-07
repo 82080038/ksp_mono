@@ -16,6 +16,7 @@ require_once __DIR__ . '/../app/bootstrap.php';
     <title>Registrasi Koperasi - ksp_mono</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
     <style>
         .card {
             border: none;
@@ -87,14 +88,20 @@ require_once __DIR__ . '/../app/bootstrap.php';
                                 <label for="koperasiVillageSelect"><i class="bi bi-house-door"></i> Kelurahan/Desa</label>
                             </div>
                         </div>
-                        <div class="d-flex flex-wrap gap-3 mt-3 align-items-start">
-                            <div class="flex-fill" style="min-width:240px;">
-                                <div class="form-floating mb-3">
-                                    <textarea class="form-control" name="alamat_lengkap" rows="2" required placeholder="Alamat lengkap"></textarea>
-                                    <label><i class="bi bi-map"></i> Alamat Lengkap</label>
+                        <div class="d-flex gap-3 mt-3 align-items-start">
+                            <div class="flex-fill">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="nama_jalan" id="namaJalanInput" placeholder="Nama Jalan">
+                                    <label for="namaJalanInput"><i class="bi bi-road"></i> Nama Jalan</label>
                                 </div>
                             </div>
-                            <div style="width:90px;">
+                            <div style="width:120px;">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="nomor_rumah" id="nomorRumahInput" placeholder="No.">
+                                    <label for="nomorRumahInput"><i class="bi bi-house-number"></i> No.</label>
+                                </div>
+                            </div>
+                            <div style="width:120px;">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" name="postal_code" id="koperasiPostalCode" readonly disabled placeholder="Kode Pos">
                                     <label for="koperasiPostalCode"><i class="bi bi-mailbox"></i> K. Pos</label>
@@ -104,54 +111,27 @@ require_once __DIR__ . '/../app/bootstrap.php';
                     
                     <h6 class="text-primary mb-3 mt-4"><i class="bi bi-info-circle-fill"></i> Detail Koperasi</h6>
                    
-                 
-                   
                     <div class="form-floating mb-3">
                         <select class="form-select" name="jenis_koperasi" required>
-                            <option value="">-- Pilih jenis koperasi --</option>
-                            <option value="KSP">Koperasi Simpan Pinjam (KSP)</option>
-                            <option value="KK">Koperasi Konsumsi</option>
-                            <option value="KP">Koperasi Produksi</option>
-                            <option value="KJ">Koperasi Jasa</option>
-                            <option value="KSU">Koperasi Serba Usaha</option>
+                            <option value="">Pilih Jenis Koperasi</option>
+                            <?php foreach ($koperasi_jenis as $jenis): ?>
+                                <option value="<?= $jenis['id'] ?>"><?= $jenis['name'] ?></option>
+                            <?php endforeach ?>
                         </select>
-                        <label><i class="bi bi-tag"></i> Jenis Koperasi</label>
+                        <label><i class="bi bi-tags"></i> Jenis Koperasi</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" name="nama_koperasi" required placeholder="Nama Koperasi">
                         <label><i class="bi bi-building"></i> Nama Koperasi</label>
                     </div>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" name="kontak" id="kontakField" required placeholder="Kontak (Telp/HP)">
-                                <label><i class="bi bi-telephone"></i> Kontak (Telp/HP)</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" name="npwp" placeholder="NPWP (opsional)">
-                                <label><i class="bi bi-receipt"></i> NPWP (opsional)</label>
-                            </div>
-                        </div>
-                    </div>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="badan_hukum" placeholder="Badan Hukum">
-                        <label><i class="bi bi-file-text"></i> Badan Hukum</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control date-field" name="tanggal_pendirian" id="tanggalPendirianField" placeholder="DD-MM-YYYY" pattern="\d{2}-\d{2}-\d{4}" title="Format tanggal: DD-MM-YYYY">
+                            <span class="input-group-text"><i class="bi bi-calendar" id="datePickerTrigger"></i></span>
+                        </div>
+                        <small class="text-muted d-block mt-1">Format: DD-MM-YYYY</small>
+                        <label><i class="bi bi-calendar"></i> Tanggal Pendirian</label>
                     </div>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" name="tanggal_pendirian" id="tanggalPendirianField" placeholder="DD-MM-YYYY">
-                                <label><i class="bi bi-calendar"></i> Tanggal Pendirian</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                <input type="number" class="form-control" name="modal_pokok" id="modalPokokField" step="0.01" placeholder="0.00">
-                                <label><i class="bi bi-cash"></i> Modal Pokok</label>
-                            </div>
-                        </div>
                     <h6 class="text-primary mb-3 mt-4"><i class="bi bi-person-fill"></i> Data Admin Koperasi</h6>
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" name="admin_nama" required placeholder="Nama Lengkap Admin">
@@ -160,13 +140,15 @@ require_once __DIR__ . '/../app/bootstrap.php';
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" name="admin_hp" id="adminHpField" required placeholder="Nomor HP Admin">
+                                <input type="text" class="form-control phone-field" name="admin_hp" id="adminHpField" required placeholder="Nomor HP Admin">
+                                <small class="text-muted d-block mt-1">Format: 08XX-XXXX-XXXX</small>
                                 <label><i class="bi bi-phone"></i> Nomor HP Admin</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" name="admin_username" required placeholder="Username Admin">
+                                <input type="text" class="form-control" name="admin_username" id="adminUsernameField" required placeholder="Username Admin" pattern="[a-zA-Z0-9_]{4,20}" title="Username harus 4-20 karakter (huruf, angka, underscore)">
+                                <small class="text-muted d-block mt-1">Format: 4-20 karakter (huruf, angka, _)</small>
                                 <label><i class="bi bi-at"></i> Username Admin</label>
                             </div>
                         </div>
@@ -174,7 +156,14 @@ require_once __DIR__ . '/../app/bootstrap.php';
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
-                                <input type="password" class="form-control" name="admin_password" required placeholder="Password Admin">
+                                <input type="password" class="form-control" name="admin_password" id="adminPasswordField" required placeholder="Password Admin">
+                                <div class="password-strength-meter mt-2">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                    <small class="text-muted">Kekuatan password: <span id="passwordStrengthText">lemah</span></small>
+                                </div>
+                                <small class="text-muted d-block mt-1">Minimal 8 karakter, mengandung huruf besar, kecil, dan angka</small>
                                 <label><i class="bi bi-lock"></i> Password Admin</label>
                             </div>
                         </div>
@@ -186,7 +175,16 @@ require_once __DIR__ . '/../app/bootstrap.php';
                         </div>
                     </div>
                     <div id="alertKoperasi" class="alert alert-danger mt-3 d-none" role="alert"></div>
-                    </form>
+                    <!-- Form Action Buttons -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="/" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Batal
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Simpan
+                        </button>
+                    </div>
+                </form>
                 </div>
                 <div class="card-footer bg-white text-center">
                     <a href="/ksp_mono/login.php">Kembali ke Login</a>
@@ -198,406 +196,332 @@ require_once __DIR__ . '/../app/bootstrap.php';
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.8/dist/jquery.inputmask.min.js"></script>
 <script src="/ksp_mono/public/assets/js/address-cache-test.js"></script>
+<script src="/ksp_mono/public/assets/js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.id.min.js"></script>
 <script>
-$(function(){
-    // Wait for AddressCache to be available (improved detection and fallback)
-    const initializeAddressSystem = () => {
-        console.log('Initializing address data system...');
+// Fungsi utama untuk inisialisasi dropdown dengan error handling yang aman
+const initDropdown = (selector, url, placeholder, nextField = null) => {
+  const $dropdown = $(selector);
 
-        // Check if localStorage is available
-        const localStorageAvailable = (() => {
-            try {
-                const test = '__localStorage_test__';
-                localStorage.setItem(test, test);
-                localStorage.removeItem(test);
-                return true;
-            } catch (e) {
-                return false;
-            }
-        })();
+  // Pastikan dropdown ada
+  if (!$dropdown.length) {
+    console.warn('Dropdown not found:', selector);
+    return;
+  }
 
-        console.log('localStorage available:', localStorageAvailable);
+  // Set status loading
+  $dropdown.prop('disabled', false)
+           .html(`<option value="">-- Memuat ${placeholder}... --</option>`);
 
-        // Check if AddressCacheTest is available and functional
-        const addressCacheAvailable = window.AddressCacheTest &&
-            typeof window.AddressCacheTest === 'object' &&
-            typeof window.AddressCacheTest.getData === 'function';
+  // Load data dengan error handling
+  $.ajax({
+    url: url,
+    dataType: 'json',
+    timeout: 10000, // Timeout 10 detik
+    success: function(response) {
+      if (!$dropdown.length) return; // Pastikan dropdown masih ada
 
-        console.log('AddressCacheTest available:', addressCacheAvailable);
-
-        if (!localStorageAvailable) {
-            // Show cache disabled notification
-            const cacheNotification = $(
-                '<div class="alert alert-info alert-dismissible fade show" role="alert">' +
-                '<i class="bi bi-info-circle"></i> ' +
-                '<strong>Cache Disabled:</strong> Browser cache/localStorage is disabled. ' +
-                'Address data will load from server each time. ' +
-                'Enable cache for better performance.' +
-                '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-                '</div>'
-            );
-
-            // Insert notification at the top of the form
-            $('#formRegisterKoperasi').prepend(cacheNotification);
-
-            // Auto-hide after 10 seconds
-            setTimeout(() => {
-                cacheNotification.fadeOut();
-            }, 10000);
-
-            console.warn('localStorage disabled - using direct API calls only');
-        }
-
-        // Initialize dropdowns
-        initializeDropdowns(addressCacheAvailable && localStorageAvailable);
-    };
-
-    // Initialize dropdowns with or without cache
-    const initializeDropdowns = (useCache = true) => {
-        console.log('Initializing dropdowns, useCache:', useCache);
-
-        // Declare jQuery selectors in outer scope
-        const $prov = $('#koperasiProvSelect');
-        const $reg = $('#koperasiRegencySelect');
-        const $dist = $('#koperasiDistrictSelect');
-        const $vill = $('#koperasiVillageSelect');
-
-        // Define all helper functions
-        const populateProvinceDropdown = (provinces) => {
-            provinces.forEach(item => $prov.append(`<option value="${item.id}">${item.nama}</option>`));
-            console.log(`Loaded ${provinces.length} provinces`);
-        };
-
-        const populateRegenciesDropdown = (regencies) => {
-            regencies.forEach(item => $reg.append(`<option value="${item.id}">${item.nama}</option>`));
-            $reg.prop('disabled', false);
-        };
-
-        const populateDistrictsDropdown = (districts) => {
-            districts.forEach(item => $dist.append(`<option value="${item.id}">${item.nama}</option>`));
-            $dist.prop('disabled', false);
-        };
-
-        const populateVillagesDropdown = (villages) => {
-            villages.forEach(item => $vill.append(`<option value="${item.id}" data-kodepos="${item.postal_code || ''}">${item.nama}</option>`));
-            $vill.prop('disabled', false);
-        };
-
-        const loadProvinces = (useCache = true) => {
-            if (useCache && window.AddressCacheTest) {
-                window.AddressCacheTest.getData('provinsi').then(provinces => {
-                    populateProvinceDropdown(provinces);
-                }).catch(error => {
-                    console.warn('AddressCacheTest failed, falling back to direct API:', error.message);
-                    loadProvincesDirect();
-                });
-            } else {
-                loadProvincesDirect();
-            }
-        };
-
-        const loadProvincesDirect = () => {
-            $.getJSON('/ksp_mono/api/provinces.php')
-                .done(function(res){
-                    if (res.success && Array.isArray(res.data)) {
-                        populateProvinceDropdown(res.data);
-                    }
-                })
-                .fail(function(){
-                    console.error('Failed to load provinces');
-                });
-        };
-
-        const setupDropdownHandlers = (useCache = true) => {
-            $prov.on('change', function(){
-                const pid = $(this).val();
-                $reg.prop('disabled', true).empty().append('<option value="">-- Pilih kab/kota --</option>');
-                $dist.prop('disabled', true).empty().append('<option value="">-- Pilih kecamatan --</option>');
-                $vill.prop('disabled', true).empty().append('<option value="">-- Pilih kelurahan/desa --</option>');
-                if (!pid) return;
-
-                loadRegencies(pid, useCache);
-            });
-
-            $reg.on('change', function(){
-                const rid = $(this).val();
-                $dist.prop('disabled', true).empty().append('<option value="">-- Pilih kecamatan --</option>');
-                $vill.prop('disabled', true).empty().append('<option value="">-- Pilih kelurahan/desa --</option>');
-                $('#koperasiPostalCode').val('').prop('disabled', true);
-                if (!rid) return;
-
-                loadDistricts(rid, useCache);
-            });
-
-            $dist.on('change', function(){
-                const did = $(this).val();
-                $vill.prop('disabled', true).empty().append('<option value="">-- Pilih kelurahan/desa --</option>');
-                $('#koperasiPostalCode').val('').prop('disabled', true);
-                if (!did) return;
-
-                loadVillages(did, useCache);
-            });
-        };
-
-        const loadRegencies = (provinceId, useCache = true) => {
-            if (useCache && window.AddressCacheTest && window.AddressCacheTest.getData) {
-                // Use sophisticated caching strategy
-                window.AddressCacheTest.getData('kabkota', parseInt(provinceId))
-                    .then(regencies => {
-                        populateRegenciesDropdown(regencies);
-                        console.log(`Loaded ${regencies.length} regencies for province ${provinceId}`);
-                    })
-                    .catch(error => {
-                        console.warn('AddressCacheTest failed for regencies:', error.message);
-                        loadRegenciesDirect(provinceId);
-                    });
-            } else {
-                loadRegenciesDirect(provinceId);
-            }
-        };
-
-        const loadRegenciesDirect = (provinceId) => {
-            $.getJSON(`/ksp_mono/api/regencies.php?province_id=${provinceId}`)
-                .done(function(res){
-                    if (res.success && Array.isArray(res.data)) {
-                        populateRegenciesDropdown(res.data);
-                    }
-                });
-        };
-
-        const loadDistricts = (regencyId, useCache = true) => {
-            if (useCache && window.AddressCacheTest && window.AddressCacheTest.getData) {
-                // Use sophisticated caching strategy
-                window.AddressCacheTest.getData('kecamatan', parseInt(regencyId))
-                    .then(districts => {
-                        populateDistrictsDropdown(districts);
-                        console.log(`Loaded ${districts.length} districts for regency ${regencyId}`);
-                    })
-                    .catch(error => {
-                        console.warn('AddressCacheTest failed for districts:', error.message);
-                        loadDistrictsDirect(regencyId);
-                    });
-            } else {
-                loadDistrictsDirect(regencyId);
-            }
-        };
-
-        const loadDistrictsDirect = (regencyId) => {
-            $.getJSON(`/ksp_mono/api/districts.php?regency_id=${regencyId}`)
-                .done(function(res){
-                    if (res.success && Array.isArray(res.data)) {
-                        populateDistrictsDropdown(res.data);
-                    }
-                });
-        };
-
-        const loadVillages = (districtId, useCache = true) => {
-            if (useCache && window.AddressCacheTest && window.AddressCacheTest.getData) {
-                // Use sophisticated caching strategy
-                window.AddressCacheTest.getData('kelurahan', parseInt(districtId))
-                    .then(villages => {
-                        populateVillagesDropdown(villages);
-                        console.log(`Loaded ${villages.length} villages for district ${districtId}`);
-                    })
-                    .catch(error => {
-                        console.warn('AddressCacheTest failed for villages:', error.message);
-                        loadVillagesDirect(districtId);
-                    });
-            } else {
-                loadVillagesDirect(districtId);
-            }
-        };
-
-        const loadVillagesDirect = (districtId) => {
-            $.getJSON(`/ksp_mono/api/villages.php?district_id=${districtId}`)
-                .done(function(res){
-                    if (res.success && Array.isArray(res.data)) {
-                        populateVillagesDropdown(res.data);
-                    }
-                });
-        };
-
-        // Execute initialization
-        loadProvinces(useCache);
-        setupDropdownHandlers(useCache);
-
-        // Village change handler for postal code (needs to be inside scope where $vill is defined)
-        $vill.on('change', function(){
-            const kode = $(this).find(':selected').data('kodepos') || '';
-            $('#koperasiPostalCode').val(kode).prop('disabled', false);
+      if (response.success && response.data && response.data.length > 0) {
+        $dropdown.empty().append(`<option value="">-- Pilih ${placeholder} --</option>`);
+        response.data.forEach(item => {
+          $dropdown.append(`<option value="${item.id}">${item.nama}</option>`);
         });
-    };
 
-    // Initialize the address system
-    initializeAddressSystem();
+        // Auto-focus dengan safe check
+        try {
+          $dropdown.get(0)?.focus();
+        } catch(e) {
+          console.warn('Focus failed for', selector, e);
+        }
+      } else {
+        $dropdown.html(`<option value="">-- Gagal memuat data --</option>`);
+      }
+    },
+    error: function(xhr, status, error) {
+      if (!$dropdown.length) return;
 
-    // Jenis koperasi auto-fill nama_koperasi (doesn't depend on AddressCache)
-    $('select[name="jenis_koperasi"]').on('change', function(){
+      console.error('Ajax error for', selector, ':', error);
+      if (status === 'timeout') {
+        $dropdown.html(`<option value="">-- Timeout - Coba refresh --</option>`);
+      } else {
+        $dropdown.html(`<option value="">-- Error koneksi --</option>`);
+      }
+    }
+  });
+
+  // Auto-tab ke field berikutnya dengan safe check
+  if (nextField) {
+    $dropdown.off('change.autoTab').on('change.autoTab', function() {
+      const $this = $(this);
+      if (!$this.length || !$this.val()) return;
+
+      const $next = $(nextField);
+      if ($next.length) {
+        try {
+          $next.get(0)?.focus();
+        } catch(e) {
+          console.warn('Auto-tab failed to', nextField, e);
+        }
+      }
+    });
+  }
+};
+
+// Hapus semua event handlers lama yang konflik
+$('#koperasiProvSelect, #koperasiRegencySelect, #koperasiDistrictSelect, #koperasiVillageSelect')
+  .off('change focus blur click');
+
+// Inisialisasi semua dropdown saat halaman ready
+$(document).ready(function() {
+  // 1. Provinsi (load pertama kali)
+  initDropdown('#koperasiProvSelect', '/ksp_mono/api/provinces.php', 'provinsi', '#koperasiRegencySelect');
+  
+  // 2. Kabupaten/Kota (load setelah provinsi dipilih)
+  $('#koperasiProvSelect').on('change', function() {
+    const provinceId = $(this).val();
+    if (provinceId) {
+      initDropdown('#koperasiRegencySelect', 
+        `/ksp_mono/api/regencies.php?province_id=${provinceId}`, 
+        'kabupaten/kota',
+        '#koperasiDistrictSelect');
+    } else {
+      $('#koperasiRegencySelect, #koperasiDistrictSelect, #koperasiVillageSelect')
+        .prop('disabled', true)
+        .empty()
+        .append('<option value="">-- Pilih --</option>');
+    }
+  });
+  
+  // 3. Kecamatan (load setelah kabupaten dipilih)
+  $('#koperasiRegencySelect').on('change', function() {
+    const regencyId = $(this).val();
+    if (regencyId) {
+      initDropdown('#koperasiDistrictSelect',
+        `/ksp_mono/api/districts.php?regency_id=${regencyId}`,
+        'kecamatan',
+        '#koperasiVillageSelect');
+    } else {
+      $('#koperasiDistrictSelect, #koperasiVillageSelect')
+        .prop('disabled', true)
+        .empty()
+        .append('<option value="">-- Pilih --</option>');
+    }
+  });
+  
+  // 4. Kelurahan/Desa (load setelah kecamatan dipilih)
+  $('#koperasiDistrictSelect').on('change', function() {
+    const districtId = $(this).val();
+    if (districtId) {
+      $.ajax({
+        url: `/ksp_mono/api/villages.php?district_id=${districtId}`,
+        dataType: 'json',
+        success: function(response) {
+          if (response.success && response.data && response.data.length > 0) {
+            const $vill = $('#koperasiVillageSelect');
+            $vill.empty().append('<option value="">-- Pilih kelurahan/desa --</option>');
+            response.data.forEach(v => {
+              $vill.append(`<option value="${v.id}" data-kodepos="${v.kodepos || ''}">${v.nama}</option>`);
+            });
+            $vill.prop('disabled', false);
+            
+            // Setup auto-fill kode pos dan focus ke alamat detail
+            $vill.off('change.villageHandler').on('change.villageHandler', function() {
+              const $this = $(this);
+              if (!$this.length) return;
+              
+              const selectedOption = $this.find(':selected');
+              if (!selectedOption.length) return;
+              
+              const postalCode = selectedOption.data('kodepos') || '';
+              
+              // Auto-fill kode pos
+              const $postal = $('#koperasiPostalCode');
+              if ($postal.length) {
+                $postal.val(postalCode);
+              }
+              
+              // Auto-focus ke alamat detail
+              const $address = $('input[name="alamat_detail"]');
+              if ($address.length) {
+                try {
+                  $address.get(0)?.focus();
+                } catch(e) {
+                  console.warn('Auto-focus failed:', e);
+                }
+              }
+            });
+          } else {
+            $('#koperasiVillageSelect')
+              .prop('disabled', true)
+              .empty()
+              .append('<option value="">-- Pilih --</option>');
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Village load error:', error);
+          $('#koperasiVillageSelect')
+            .prop('disabled', true)
+            .empty()
+            .append('<option value="">-- Error memuat --</option>');
+        }
+      });
+    } else {
+      $('#koperasiVillageSelect')
+        .prop('disabled', true)
+        .empty()
+        .append('<option value="">-- Pilih --</option>');
+    }
+  });
+});
+
+// Initialize all form field helpers
+$(document).ready(function() {
+    // Auto-fill nama_koperasi when jenis_koperasi is selected
+    $('select[name="jenis_koperasi"]').on('change', function() {
         const selectedValue = $(this).val();
         if (selectedValue) {
-            $('input[name="nama_koperasi"]').val(selectedValue).focus();
+            $('input[name="nama_koperasi"]').val(selectedValue + ' ').focus();
         }
     });
-
-    // Initialize input masks
-    // Phone number masking with enhanced behavior
-    $('#kontakField, #adminHpField').on('keydown', function(e) {
-        const $field = $(this);
-        const currentValue = $field.val();
-
-        // If user types '0' at the beginning and field is empty or starts with 0
-        if (e.key === '0' && (currentValue === '' || currentValue === '0')) {
-            e.preventDefault(); // Prevent the '0' from being typed
-
-            // Show "62" flashing effect
-            const originalPlaceholder = $field.attr('placeholder') || '';
-            $field.attr('placeholder', '62');
-
-            // Flash effect - change background color and text
-            let flashCount = 0;
-            const flashInterval = setInterval(() => {
-                if (flashCount >= 6) { // 3 flashes (on-off-on-off-on-off)
-                    clearInterval(flashInterval);
-                    $field.attr('placeholder', originalPlaceholder);
-                    $field.focus();
-                    return;
-                }
-
-                if (flashCount % 2 === 0) {
-                    $field.css('background-color', '#e3f2fd'); // Light blue flash
-                    $field.attr('placeholder', '62');
-                } else {
-                    $field.css('background-color', ''); // Normal background
-                    $field.attr('placeholder', '');
-                }
-
-                flashCount++;
-            }, 200); // 200ms intervals for 3 flashes
-
-            return false;
-        }
-    }).on('input', function() {
-        const $field = $(this);
-        let value = $field.val().replace(/-/g, '');
-
-        // Remove any leading zeros and ensure 62 prefix
-        if (value.length > 0) {
-            // Remove leading zeros
-            value = value.replace(/^0+/, '');
-
-            // Ensure starts with 62
-            if (!value.startsWith('62')) {
-                value = '62' + value;
-            }
-
-            // Apply Indonesian phone number formatting (every 4 digits)
-            let formatted = '';
-            for (let i = 0; i < value.length; i++) {
-                if (i > 0 && i % 4 === 0) {
-                    formatted += '-';
-                }
-                formatted += value[i];
-            }
-
-            $field.val(formatted);
-        }
-
-        // Validation: Indonesian phone numbers should be 12-15 digits (including 62)
-        const cleanValue = value.replace(/-/g, '');
-        if (cleanValue.length >= 12 && cleanValue.length <= 15 && cleanValue.startsWith('62')) {
-            $field.removeClass('is-invalid').addClass('is-valid');
-        } else if (cleanValue.length > 0) {
-            $field.removeClass('is-valid').addClass('is-invalid');
+    
+    // Show/hide nomor badan hukum field based on status badan hukum selection
+    $('#statusBadanHukum').on('change', function() {
+        const selectedValue = $(this).val();
+        if (selectedValue === 'badan_hukum') {
+            $('#nomorBadanHukumContainer').show();
         } else {
-            $field.removeClass('is-valid is-invalid');
-        }
-    }).on('blur', function() {
-        const $field = $(this);
-        const value = $field.val().replace(/-/g, '');
-
-        // Final validation on blur
-        if (value.length > 0 && (value.length < 12 || value.length > 15 || !value.startsWith('62'))) {
-            $field.removeClass('is-valid').addClass('is-invalid');
+            $('#nomorBadanHukumContainer').hide();
         }
     });
+});
 
-    // Indonesian date masking with calendar icon
-    $('#tanggalPendirianField').inputmask('99-99-9999', {
-        placeholder: 'DD-MM-YYYY',
-        showMaskOnHover: false,
-        showMaskOnFocus: false
-    }).wrap('<div class="input-group"></div>').after('<button class="btn btn-outline-secondary" type="button" id="tanggalCalendarBtn"><i class="bi bi-calendar"></i></button>');
-
-    $('#tanggalCalendarBtn').on('click', function(){
-        $('#tanggalPendirianField').focus();
+$(document).ready(function() {
+    // Initialize date picker
+    $('#tanggalPendirianField').datepicker({
+        format: 'dd-mm-yyyy',
+        autoclose: true,
+        todayHighlight: true,
+        language: 'id'
     });
-
-    // Rupiah formatting for modal pokok
-    $('#modalPokokField').on('input', function(){
-        let value = $(this).val().replace(/[^0-9.]/g, '');
-        if (value) {
-            const numValue = parseFloat(value);
-            $(this).val(numValue.toLocaleString('id-ID'));
-        }
-    }).on('blur', function(){
-        const value = $(this).val();
-        if (value && !isNaN(parseFloat(value.replace(/[^0-9.]/g, '')))) {
-            const numValue = parseFloat(value.replace(/[^0-9.]/g, ''));
-            $(this).val(numValue.toLocaleString('id-ID', {minimumFractionDigits: 0, maximumFractionDigits: 2}));
+    
+    // Make calendar icon trigger datepicker
+    $('#datePickerTrigger').click(function() {
+        $('#tanggalPendirianField').datepicker('show');
+    });
+    
+    // Real-time date format validation
+    $('#tanggalPendirianField').on('change', function() {
+        if (!/^\d{2}-\d{2}-\d{4}$/.test(this.value)) {
+            this.setCustomValidity('Format tanggal harus DD-MM-YYYY');
+        } else {
+            this.setCustomValidity('');
         }
     });
+});
 
-    $('#formRegisterKoperasi').on('submit', function(e){
-        e.preventDefault();
-        $('#alertKoperasi').addClass('d-none');
+$(document).ready(function() {
+    // Username validation
+    $('#adminUsernameField').on('input', function() {
+        const username = $(this).val();
+        const isValid = /^[a-zA-Z0-9_]{4,20}$/.test(username);
+        $(this).toggleClass('is-invalid', !isValid);
+        $(this).toggleClass('is-valid', isValid && username.length > 0);
+    });
+});
 
-        // Validasi tambahan
-        const nama = $('input[name="nama_koperasi"]').val().trim();
-        const alamat = $('textarea[name="alamat_lengkap"]').val().trim();
-        const kontak = $('input[name="kontak"]').val().trim();
-        const npwp = $('input[name="npwp"]').val().trim();
+$(document).ready(function() {
+    // Password strength meter
+    const $passwordField = $('#adminPasswordField');
+    const $strengthMeter = $('.password-strength-meter');
+    const $strengthText = $('#passwordStrengthText');
+    const $progressBar = $strengthMeter.find('.progress-bar');
 
-        if (nama.length < 3) {
-            $('#alertKoperasi').removeClass('d-none alert-info').addClass('alert-danger').text('Nama koperasi minimal 3 karakter.');
-            return;
-        }
-        if (alamat.length < 10) {
-            $('#alertKoperasi').removeClass('d-none alert-info').addClass('alert-danger').text('Alamat lengkap minimal 10 karakter.');
-            return;
-        }
-        const phoneRegex = /^[0-9+\-\s()]+$/;
-        const cleanKontak = kontak.replace(/[\-\s()]/g, '');
-        if (!phoneRegex.test(kontak) || cleanKontak.length < 12 || cleanKontak.length > 15 || !cleanKontak.startsWith('62')) {
-            $('#alertKoperasi').removeClass('d-none alert-info').addClass('alert-danger').text('Kontak harus berupa nomor telepon Indonesia yang valid (12-15 digit dimulai dengan 62).');
-            return;
-        }
-        if (npwp && !/^[0-9]{15}$/.test(npwp)) {
-            $('#alertKoperasi').removeClass('d-none alert-info').addClass('alert-danger').text('NPWP harus 15 digit angka.');
-            return;
+    $passwordField.on('input', function() {
+        const password = $(this).val();
+        let strength = 0;
+
+        // Minimal 8 karakter
+        if (password.length >= 8) {
+            strength += 20;
         }
 
-        const $form = $('#formRegisterKoperasi');
-        const data = $form.serialize();
-        const $btn = $form.find('button[type="submit"]');
-        const original = $btn.html();
-        $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Memproses...');
-        $.ajax({
-            url: $form.attr('action'),
-            method: 'POST',
-            data: data,
-            dataType: 'json'
-        }).done(function(res){
-            if (res.success) {
-                $('#alertKoperasi').removeClass('d-none alert-danger').addClass('alert-info').text(res.message || 'Koperasi berhasil didaftarkan. Silakan lanjut registrasi admin.');
-                $form[0].reset();
-            } else {
-                $('#alertKoperasi').removeClass('d-none alert-info').addClass('alert-danger').text(res.message || 'Gagal menyimpan data');
-            }
-        }).fail(function(){
-            $('#alertKoperasi').removeClass('d-none alert-info').addClass('alert-danger').text('Terjadi kesalahan koneksi.');
-        }).always(function(){
-            $btn.prop('disabled', false).html(original);
-        });
+        // Mengandung huruf besar
+        if (/[A-Z]/.test(password)) {
+            strength += 20;
+        }
+
+        // Mengandung huruf kecil
+        if (/[a-z]/.test(password)) {
+            strength += 20;
+        }
+
+        // Mengandung angka
+        if (/\d/.test(password)) {
+            strength += 20;
+        }
+
+        // Mengandung karakter spesial
+        if (/[^A-Za-z0-9]/.test(password)) {
+            strength += 20;
+        }
+
+        $progressBar.css('width', `${strength}%`);
+        $strengthText.text(getStrengthText(strength));
+    });
+
+    function getStrengthText(strength) {
+        if (strength < 20) {
+            return 'lemah';
+        } else if (strength < 40) {
+            return 'sedang';
+        } else if (strength < 60) {
+            return 'kuat';
+        } else if (strength < 80) {
+            return 'sangat kuat';
+        } else {
+            return 'ekstra kuat';
+        }
+    }
+});
+
+$(document).ready(function() {
+    // Password validation
+    $('#adminPasswordField').on('input', function() {
+        const password = $(this).val();
+        let strength = 0;
+        
+        // Length check
+        if (password.length >= 8) strength += 1;
+        
+        // Contains lowercase
+        if (/[a-z]/.test(password)) strength += 1;
+        
+        // Contains uppercase
+        if (/[A-Z]/.test(password)) strength += 1;
+        
+        // Contains number
+        if (/\d/.test(password)) strength += 1;
+        
+        // Update meter
+        const percent = strength * 25;
+        $('.progress-bar').css('width', percent + '%');
+        
+        // Update text
+        const strengthText = ['Lemah', 'Cukup', 'Baik', 'Kuat'];
+        $('#passwordStrengthText').text(strengthText[strength - 1] || '');
+    });
+    
+    // Password confirmation check
+    $('[name="admin_password"], [name="admin_password_confirm"]').on('input', function() {
+        const pass1 = $('[name="admin_password"]').val();
+        const pass2 = $('[name="admin_password_confirm"]').val();
+        
+        if (pass1 && pass2) {
+            const match = pass1 === pass2;
+            $('[name="admin_password_confirm"]').toggleClass('is-invalid', !match);
+            $('[name="admin_password_confirm"]').toggleClass('is-valid', match);
+        }
     });
 });
 </script>

@@ -22,7 +22,7 @@ $db = Database::conn();
 $response = ['success' => false, 'message' => ''];
 
 // Validate required fields
-$requiredFields = ['province_id', 'regency_id', 'district_id', 'village_id', 'alamat_lengkap', 'jenis_koperasi', 'nama_koperasi', 'kontak', 'admin_nama', 'admin_hp', 'admin_username', 'admin_password', 'admin_password_confirm'];
+$requiredFields = ['jenis_koperasi', 'nama_koperasi', 'tanggal_pendirian', 'admin_nama', 'admin_hp', 'admin_username', 'admin_password', 'admin_password_confirm'];
 foreach ($requiredFields as $field) {
     if (empty($_POST[$field])) {
         $response['message'] = "Field {$field} is required";
@@ -34,12 +34,7 @@ foreach ($requiredFields as $field) {
 // Sanitize and validate input data
 $nama_koperasi = trim($_POST['nama_koperasi']);
 $jenis_koperasi = $_POST['jenis_koperasi'];
-$alamat_lengkap = trim($_POST['alamat_lengkap']);
-$kontak = unmask_phone_number(trim($_POST['kontak']));
-$npwp = trim($_POST['npwp'] ?? '');
-$badan_hukum = trim($_POST['badan_hukum'] ?? '');
 $tanggal_pendirian = $_POST['tanggal_pendirian'] ? indonesian_date_to_db(trim($_POST['tanggal_pendirian'])) : null;
-$modal_pokok = parse_rupiah($_POST['modal_pokok'] ?? '0');
 
 // Admin data
 $admin_nama = trim($_POST['admin_nama']);
@@ -55,25 +50,7 @@ if (strlen($nama_koperasi) < 3) {
     exit;
 }
 
-if (strlen($alamat_lengkap) < 10) {
-    $response['message'] = 'Alamat lengkap minimal 10 karakter';
-    echo json_encode($response);
-    exit;
-}
-
-if (!validate_indonesian_phone($kontak)) {
-    $response['message'] = 'Kontak harus berupa nomor telepon Indonesia yang valid (12-15 digit dimulai dengan 62)';
-    echo json_encode($response);
-    exit;
-}
-
-if ($npwp && !validate_npwp($npwp)) {
-    $response['message'] = 'NPWP harus 15 atau 16 digit angka';
-    echo json_encode($response);
-    exit;
-}
-
-if ($tanggal_pendirian && !validate_indonesian_date(format_indonesian_date($tanggal_pendirian))) {
+if (!validate_indonesian_date(format_indonesian_date($tanggal_pendirian))) {
     $response['message'] = 'Tanggal pendirian tidak valid';
     echo json_encode($response);
     exit;
@@ -146,30 +123,18 @@ try {
     // Insert cooperative data
     $stmt = $db->prepare('
         INSERT INTO koperasi_tenant (
-            nama_koperasi, jenis_koperasi, badan_hukum, status_badan_hukum,
-            tanggal_pendirian, npwp, modal_pokok, alamat_legal, kontak_resmi,
-            provinsi_id, kabkota_id, kecamatan_id, kelurahan_id, dibuat_pada
+            nama_koperasi, jenis_koperasi, tanggal_pendirian,
+            status_badan_hukum, dibuat_pada
         ) VALUES (
-            :nama, :jenis, :badan_hukum, :status_badan_hukum,
-            :tanggal_pendirian, :npwp, :modal_pokok, :alamat_legal, :kontak_resmi,
-            :provinsi_id, :kabkota_id, :kecamatan_id, :kelurahan_id, NOW()
+            :nama, :jenis, :tanggal_pendirian,
+            \'belum_terdaftar\', NOW()
         )
     ');
 
     $stmt->execute([
         ':nama' => $nama_koperasi,
         ':jenis' => $jenis_koperasi_json,
-        ':badan_hukum' => $badan_hukum,
-        ':status_badan_hukum' => 'belum_terdaftar',
-        ':tanggal_pendirian' => $tanggal_pendirian,
-        ':npwp' => $npwp,
-        ':modal_pokok' => $modal_pokok,
-        ':alamat_legal' => $alamat_lengkap,
-        ':kontak_resmi' => $kontak,
-        ':provinsi_id' => intval($_POST['province_id']),
-        ':kabkota_id' => intval($_POST['regency_id']),
-        ':kecamatan_id' => intval($_POST['district_id']),
-        ':kelurahan_id' => intval($_POST['village_id'])
+        ':tanggal_pendirian' => $tanggal_pendirian
     ]);
 
     $cooperative_id = $db->lastInsertId();
@@ -207,26 +172,16 @@ try {
         ':pengguna_id' => $user_id,
         ':peran_jenis_id' => 1 // Assuming 1 is admin role
     ]);
+
+    // Assign admin role
+    $stmt = $db->prepare('INSERT INTO pengguna_peran (pengguna_id, peran_jenis_id) VALUES (?, 2)');
+    $stmt->execute([$user_id]);
+
+    // Also set admin flag in session if registering current user
+    if (!isset($_SESSION['user_id'])) {
+        $_SESSION['permissions'] = ['manage_cooperative'];
+    }
     
-    // Create default financial settings for the cooperative
-    $stmt = $db->prepare('
-        INSERT INTO koperasi_keuangan_pengaturan (
-            cooperative_id, tahun_buku, periode_mulai, periode_akhir,
-            simpanan_pokok, simpanan_wajib, bunga_pinjaman, denda_telat,
-            periode_shu, status, created_at
-        ) VALUES (
-            :coop_id, YEAR(CURDATE()), DATE(CONCAT(YEAR(CURDATE()), "-01-01")),
-            DATE(CONCAT(YEAR(CURDATE()), "-12-31")), :simpanan_pokok, :simpanan_wajib,
-            12.00, 2.00, "yearly", "active", NOW()
-        )
-    ');
-
-    $stmt->execute([
-        ':coop_id' => $cooperative_id,
-        ':simpanan_pokok' => 100000.00, // Default values
-        ':simpanan_wajib' => 50000.00
-    ]);
-
     // Commit transaction
     $db->commit();
 

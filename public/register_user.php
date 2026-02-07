@@ -78,15 +78,17 @@ require_once __DIR__ . '/../app/bootstrap.php';
                     
                     <h6 class="text-primary mb-3 mt-4"><i class="bi bi-shield-lock-fill"></i> Detail Akun</h6>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="username" required placeholder="Username">
-                        <label><i class="bi bi-person-circle"></i> Username</label>
+                        <input type="text" class="form-control" name="username" id="usernameField" required placeholder="Username" pattern="[a-zA-Z0-9_]{4,20}">
+                        <small class="text-muted d-block mt-1">4-20 karakter (huruf, angka, _)</small>
+                        <label><i class="bi bi-person-badge"></i> Username</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="email" class="form-control" name="email" required placeholder="Email">
                         <label><i class="bi bi-envelope"></i> Email</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" name="password" required placeholder="Password">
+                        <input type="password" class="form-control" name="password" id="passwordField" required placeholder="Password">
+                        <small class="text-muted d-block mt-1">Minimal 8 karakter, huruf besar+kecil, dan angka</small>
                         <label><i class="bi bi-lock"></i> Password</label>
                     </div>
                     <div class="form-floating mb-3">
@@ -158,6 +160,25 @@ $(function(){
             $kecSel.append('<option value="">-- Pilih kecamatan --</option>');
             $kecSel.prop('disabled', true);
         }
+    });
+
+    // Client-side validation
+    $('#usernameField').on('input', function() {
+        const valid = /^[a-zA-Z0-9_]{4,20}$/.test($(this).val());
+        $(this).toggleClass('is-valid', valid);
+        $(this).toggleClass('is-invalid', !valid && $(this).val().length > 0);
+    });
+    
+    $('#passwordField').on('input', function() {
+        const valid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test($(this).val());
+        $(this).toggleClass('is-valid', valid);
+        $(this).toggleClass('is-invalid', !valid && $(this).val().length > 0);
+    });
+    
+    $('[name="password"], [name="password_confirm"]').on('input', function() {
+        const match = $('[name="password"]').val() === $('[name="password_confirm"]').val();
+        $('[name="password_confirm"]').toggleClass('is-valid', match);
+        $('[name="password_confirm"]').toggleClass('is-invalid', !match && $('[name="password_confirm"]').val().length > 0);
     });
 
     $('#formRegisterUser').on('submit', function(e){

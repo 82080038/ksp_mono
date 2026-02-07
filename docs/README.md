@@ -44,11 +44,22 @@ Aplikasi manajemen koperasi modern dengan fitur lengkap untuk mengelola simpanan
    DB_NAME_ADDRESS=alamat_db
    ```
 
-4. Buat database:
-   - Buka phpMyAdmin di http://localhost/phpmyadmin
-   - Jalankan file `sql/people_db.sql` untuk membuat database People DB
-   - Jalankan file `sql/coop_db.sql` untuk membuat database Coop DB
-   - Database Address DB (alamat_db) sudah ada
+4. Buat database (CLI import, tanpa phpMyAdmin):
+   - Import schema + data alamat (read-only):
+     ```bash
+     mysql -u root -p alamat_db < sql/alamat_db_max_date_schema.sql
+     mysql -u root -p alamat_db < sql/alamat_db_with_data.sql
+     ```
+   - Import database People (jika dibutuhkan):
+     ```bash
+     mysql -u root -p people_db < sql/people_db.sql
+     ```
+   - Import database Koperasi (coop_db/koperasi_db, sesuaikan nama di config.php/.env):
+     ```bash
+     mysql -u root -p koperasi_db < sql/koperasi_db.sql
+     mysql -u root -p koperasi_db < sql/koperasi_db_with_data.sql
+     ```
+   - Pastikan kredensial `config/config.php` atau `.env` sesuai (host/user/pass/nama DB)
 
 5. Pastikan Apache dikonfigurasi untuk melayani direktori `src/public` sebagai root dokumen, atau gunakan built-in PHP server untuk development.
 

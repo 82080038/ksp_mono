@@ -46,20 +46,37 @@ if (!$auth->check()) {
                 <form id="formTambahAnggota">
                     <div class="mb-3">
                         <label for="nik" class="form-label">NIK</label>
-                        <input type="text" class="form-control" id="nik" name="nik" required>
+                        <input type="text" class="form-control" id="nik" name="nik" required pattern="\d{16}" title="NIK harus 16 digit angka">
+                        <small class="text-muted">16 digit angka</small>
                     </div>
                     <div class="mb-3">
                         <label for="nama" class="form-label">Nama Lengkap</label>
                         <input type="text" class="form-control" id="nama" name="nama" required>
                     </div>
                     <div class="mb-3">
-                        <label for="alamat" class="form-label">Alamat</label>
-                        <textarea class="form-control" id="alamat" name="alamat" rows="3" required></textarea>
+                        <label for="hp" class="form-label">No. HP</label>
+                        <input type="text" class="form-control phone-field" id="hp" name="hp" required>
+                        <small class="text-muted">Format: 08XX-XXXX-XXXX</small>
                     </div>
-                    <div class="mb-3">
-                        <label for="no_hp" class="form-label">No. HP</label>
-                        <input type="tel" class="form-control" id="no_hp" name="no_hp" required>
-                    </div>
+                    
+                    <script>
+                    // Member form validation
+                    $('#formTambahAnggota').on('submit', function(e) {
+                        const form = this;
+                        if (!form.checkValidity()) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                        
+                        $(form).addClass('was-validated');
+                    });
+                    
+                    // Initialize phone field masking
+                    $('.phone-field').on('input', function() {
+                        $(this).val(formatPhoneNumber($(this).val()));
+                    });
+                    </script>
+                    
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>

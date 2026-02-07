@@ -63,6 +63,142 @@ function unmask_phone_number($masked_phone) {
 }
 
 /**
+ * Indonesian Address Formatting Helper Functions
+ */
+
+/**
+ * Format Indonesian address using international standards
+ * @param array $address_components Address components array
+ * @return string Formatted address
+ */
+function format_indonesian_address($address_components) {
+    // Indonesian Address Format (6-line structure):
+    // [Street Name] [House Number]
+    // [Village]
+    // [District with Kec. prefix]
+    // [Regency]
+    // [Province]
+    // INDONESIA - [Postal Code]
+
+    $formatted = '';
+
+    // Line 1: Street level (road + house number)
+    $street_parts = [];
+    if (!empty($address_components['road'])) {
+        $street_parts[] = $address_components['road'];
+    }
+    if (!empty($address_components['houseNumber'])) {
+        $street_parts[] = 'No. ' . $address_components['houseNumber'];
+    }
+
+    if (!empty($street_parts)) {
+        $formatted .= implode(' ', $street_parts) . "\n";
+    }
+
+    // Line 2: Village name only
+    if (!empty($address_components['village'])) {
+        $formatted .= $address_components['village'] . "\n";
+    }
+
+    // Line 3: District with Kec. prefix
+    if (!empty($address_components['district'])) {
+        $formatted .= 'Kec. ' . $address_components['district'] . "\n";
+    }
+
+    // Line 4: Regency name
+    if (!empty($address_components['regency'])) {
+        $formatted .= $address_components['regency'] . "\n";
+    }
+
+    // Line 5: Province name
+    if (!empty($address_components['province'])) {
+        $formatted .= $address_components['province'] . "\n";
+    }
+
+    // Line 6: Country with postal code
+    $country_line = 'INDONESIA';
+    if (!empty($address_components['postcode'])) {
+        $country_line .= ' - ' . $address_components['postcode'];
+    }
+    $formatted .= $country_line;
+
+    return trim($formatted);
+}
+
+/**
+ * Validate Indonesian address components
+ * @param array $address_components Address components
+ * @return array Validation result with errors
+ */
+function validate_indonesian_address($address_components) {
+    $errors = [];
+    $warnings = [];
+
+    // Required components for Indonesian addresses
+    if (empty($address_components['province'])) {
+        $errors[] = 'Provinsi wajib diisi';
+    }
+
+    if (empty($address_components['city']) && empty($address_components['regency'])) {
+        $warnings[] = 'Kota/Kabupaten disarankan diisi untuk alamat lengkap';
+    }
+
+    // Postal code validation
+    if (!empty($address_components['postcode'])) {
+        if (!preg_match('/^\d{5}$/', $address_components['postcode'])) {
+            $errors[] = 'Kode pos harus 5 digit angka';
+        }
+    } else {
+        $warnings[] = 'Kode pos disarankan diisi';
+    }
+
+    // Street address validation
+    if (empty($address_components['road']) && empty($address_components['houseNumber'])) {
+        $warnings[] = 'Nama jalan atau nomor rumah disarankan diisi';
+    }
+
+    return [
+        'valid' => empty($errors),
+        'errors' => $errors,
+        'warnings' => $warnings
+    ];
+}
+
+/**
+ * Generate address suggestions for Indonesian addresses
+ * @param string $input User input
+ * @return array Address suggestions
+ */
+function suggest_indonesian_address($input) {
+    $suggestions = [];
+
+    // Common Indonesian address patterns
+    $patterns = [
+        'jalan' => ['Jl.', 'Jalan'],
+        'gang' => ['Gg.', 'Gang'],
+        'nomor' => ['No.', 'Nomor'],
+        'rt' => ['RT', 'Rt'],
+        'rw' => ['RW', 'Rw'],
+        'desa' => ['Ds.', 'Desa'],
+        'kelurahan' => ['Kel.', 'Kelurahan'],
+        'kecamatan' => ['Kec.', 'Kecamatan'],
+        'kabupaten' => ['Kab.', 'Kabupaten'],
+        'kota' => ['Kota']
+    ];
+
+    // Simple suggestion based on input
+    $input_lower = strtolower($input);
+
+    foreach ($patterns as $key => $variations) {
+        if (strpos($input_lower, $key) === false) {
+            $suggestions[] = $input . ' ' . $variations[0];
+        }
+    }
+
+    return array_slice($suggestions, 0, 5); // Limit to 5 suggestions
+}
+
+/**
  * Format date to Indonesian format (dd-mm-yyyy)
  * @param string $date Date string (yyyy-mm-dd or dd-mm-yyyy)
  * @return string Formatted date
@@ -169,299 +305,140 @@ function validate_indonesian_date($date) {
 }
 
 /**
- * Validate Indonesian NPWP format (15 or 16 digits)
+ * Validate Indonesian NPWP format (standard format: XX.XXX.XXX.X-XXX.XXX)
  * @param string $npwp NPWP number
- * @return bool Is valid
+ * @return array Validation result with message
  */
 function validate_npwp($npwp) {
-    // Remove all non-numeric characters
-    $clean_npwp = preg_replace('/\D/', '', $npwp);
-
-    // NPWP should be 15 or 16 digits
-    return strlen($clean_npwp) === 15 || strlen($clean_npwp) === 16;
+    // Handle empty input (optional field)
+    if (empty($npwp)) {
+        return ['valid' => true, 'message' => ''];
+    }
+    
+    // Standard NPWP format: XX.XXX.XXX.X-XXX.XXX
+    $pattern = '/^\d{2}\.\d{3}\.\d{3}\.\d-\d{3}\.\d{3}$/';
+    
+    // Reject any non-format characters
+    if (preg_match('/[^0-9.-]/', $npwp)) {
+        return ['valid' => false, 'message' => 'Hanya angka, titik, dan strip yang diperbolehkan'];
+    }
+    
+    if (preg_match($pattern, $npwp)) {
+        return ['valid' => true, 'message' => 'Format NPWP valid'];
+    }
+    
+    // Also accept clean 15/16 digit numbers
+    $clean = preg_replace('/[^0-9]/', '', $npwp);
+    if (strlen($clean) === 15 || strlen($clean) === 16) {
+        return ['valid' => true, 'message' => 'Format NPWP valid (tanpa pemisah)'];
+    }
+    
+    return ['valid' => false, 'message' => 'Format NPWP tidak valid. Gunakan format: XX.XXX.XXX.X-XXX.XXX'];
 }
 
 /**
- * Validate cooperative business entity number (NIK format)
- * Format: XX/BH/XX/.X/XXXX or similar patterns
+ * Validate cooperative business entity number
  * @param string $badan_hukum Business entity number
+ * @param string|null $status Optional status to validate against number
  * @return bool Is valid
  */
-function validate_badan_hukum_koperasi($badan_hukum) {
-    if (empty($badan_hukum)) return true; // Optional field
-
-    // Common patterns for cooperative business entity numbers:
-    // - Contains /BH/ (Badan Hukum)
-    // - May have province codes, registration numbers
-    return strpos($badan_hukum, '/BH/') !== false || strlen($badan_hukum) >= 10;
-}
-
-// ============================================================================
-// ADDRESS DATA CACHING SYSTEM
-// ============================================================================
-
-/**
- * Get address database connection
- * @return PDO Address database connection
- */
-function get_address_db_connection() {
-    static $addressDb = null;
-
-    if ($addressDb === null) {
-        $config = require __DIR__ . '/../config/config.php';
-        try {
-            $addressDb = new PDO(
-                "mysql:host={$config['alamat_db']['host']};dbname={$config['alamat_db']['name']};charset={$config['alamat_db']['charset']}",
-                $config['alamat_db']['user'],
-                $config['alamat_db']['pass'],
-                [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES => false,
-                ]
-            );
-        } catch (PDOException $e) {
-            error_log('Address DB connection error: ' . $e->getMessage());
-            throw new Exception('Failed to connect to address database');
-        }
+function validate_badan_hukum_koperasi($badan_hukum, $status = null) {
+    // Empty is valid (optional field)
+    if (empty($badan_hukum)) return true;
+    
+    // Clean input - remove all non-digit characters
+    $clean = preg_replace('/\D/', '', $badan_hukum);
+    
+    // Must be exactly 12 digits if status requires it
+    if ($status === 'badan_hukum' || $status === 'terdaftar') {
+        return strlen($clean) === 12;
     }
-
-    return $addressDb;
+    
+    // For other statuses or no status, just validate basic format
+    return strlen($clean) >= 10; // Minimum 10 digits
 }
 
 /**
- * Get address data versions using max_date approach (more efficient)
- * @return array Max date information for all address tables
+ * Combo Box Helper Functions
  */
-function get_address_max_dates() {
-    try {
-        $db = get_address_db_connection();
-        $stmt = $db->query("SELECT table_name, max_date, record_count, last_checked FROM table_max_dates");
-        $max_dates = [];
-        while ($row = $stmt->fetch()) {
-            $max_dates[$row['table_name']] = [
-                'max_date' => $row['max_date'],
-                'record_count' => $row['record_count'],
-                'last_checked' => $row['last_checked']
-            ];
-        }
-        return $max_dates;
-    } catch (Exception $e) {
-        error_log('Error getting address max dates: ' . $e->getMessage());
-        return [];
+
+/**
+ * Initialize combo box with auto-focus and data loading
+ * @param string $selector Combo box selector
+ * @param array $options Configuration options
+ */
+function init_combo_box($selector, $options = []) {
+    $defaults = [
+        'data_url' => '',
+        'next_tab_selector' => '',
+        'min_length' => 0
+    ];
+    $options = array_merge($defaults, $options);
+
+    echo "<script>
+    $(document).ready(function() {
+        $('{$selector}').on('focus', function() {
+            // Load data if empty and meets minimum length
+            if ($(this).find('option').length <= 1 && $(this).val().length >= {$options['min_length']}) {
+                load_combo_data('{$selector}', '{$options['data_url']}');
+            }
+        }).on('change', function() {
+            // Auto-tab to next field if selected
+            if ($(this).val() && '{$options['next_tab_selector']}') {
+                $('{$options['next_tab_selector']}').focus();
+            }
+        });
+    });
+
+    function load_combo_data(selector, url) {
+        $(selector).prop('disabled', true);
+        $.getJSON(url, function(data) {
+            if (data && data.length > 0) {
+                $(selector).empty().append('<option value=\"\">-- Pilih --</option>');
+                $.each(data, function(i, item) {
+                    $(selector).append($('<option>', {
+                        value: item.id,
+                        text: item.name
+                    }));
+                });
+            }
+            $(selector).prop('disabled', false).focus();
+        }).fail(function() {
+            $(selector).prop('disabled', false);
+        });
     }
+    </script>";
 }
 
 /**
- * Check if address data has changed since last check
- * @param string $type Data type
- * @param string $last_max_date Last known max date
- * @return bool Whether data has changed
+ * Check if user has specific permission
+ * @param string $permission Permission key to check
+ * @return bool Whether user has permission
  */
-function has_address_data_changed($type, $last_max_date) {
-    try {
-        $db = get_address_db_connection();
-        $stmt = $db->prepare("SELECT max_date FROM table_max_dates WHERE table_name = ?");
-        $stmt->execute([$type]);
-        $result = $stmt->fetch();
-
-        if (!$result) {
-            return true; // Table not found, assume changed
-        }
-
-        return $result['max_date'] !== $last_max_date;
-    } catch (Exception $e) {
-        error_log('Error checking address data changes: ' . $e->getMessage());
-        return true; // On error, assume changed to force refresh
+function has_permission($permission) {
+    if (!isset($_SESSION['user_id'])) {
+        return false;
     }
+    
+    // Check session cache first
+    if (isset($_SESSION['permissions']) && in_array($permission, $_SESSION['permissions'])) {
+        return true;
+    }
+    
+    $db = Database::conn();
+    
+    // Get all permissions for user's roles
+    $stmt = $db->prepare('SELECT p.permission_key 
+        FROM pengguna_peran pp
+        JOIN peran_izin pi ON pp.peran_jenis_id = pi.peran_jenis_id
+        JOIN permissions p ON pi.permission_id = p.id
+        WHERE pp.pengguna_id = ?');
+    $stmt->execute([$_SESSION['user_id']]);
+    
+    $user_permissions = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $_SESSION['permissions'] = $user_permissions; // Cache in session
+    
+    return in_array($permission, $user_permissions);
 }
 
-/**
- * Get all provinces data
- * @return array Provinces data
- */
-function get_provinces_data() {
-    try {
-        $db = get_address_db_connection();
-        $stmt = $db->query("SELECT id, code, name FROM provinsi ORDER BY name");
-        return $stmt->fetchAll();
-    } catch (Exception $e) {
-        error_log('Error getting provinces: ' . $e->getMessage());
-        return [];
-    }
-}
-
-/**
- * Get regencies by province ID
- * @param int $province_id Province ID
- * @return array Regencies data
- */
-function get_regencies_data($province_id) {
-    try {
-        $db = get_address_db_connection();
-        $stmt = $db->prepare("SELECT id, code, name, postal_code FROM kabkota WHERE province_id = ? ORDER BY name");
-        $stmt->execute([$province_id]);
-        return $stmt->fetchAll();
-    } catch (Exception $e) {
-        error_log('Error getting regencies: ' . $e->getMessage());
-        return [];
-    }
-}
-
-/**
- * Get districts by regency ID
- * @param int $regency_id Regency ID
- * @return array Districts data
- */
-function get_districts_data($regency_id) {
-    try {
-        $db = get_address_db_connection();
-        $stmt = $db->prepare("SELECT id, code, name FROM kecamatan WHERE regency_id = ? ORDER BY name");
-        $stmt->execute([$regency_id]);
-        return $stmt->fetchAll();
-    } catch (Exception $e) {
-        error_log('Error getting districts: ' . $e->getMessage());
-        return [];
-    }
-}
-
-/**
- * Get villages by district ID
- * @param int $district_id District ID
- * @return array Villages data
- */
-function get_villages_data($district_id) {
-    try {
-        $db = get_address_db_connection();
-        $stmt = $db->prepare("SELECT id, code, name, postal_code FROM kelurahan WHERE district_id = ? ORDER BY name");
-        $stmt->execute([$district_id]);
-        return $stmt->fetchAll();
-    } catch (Exception $e) {
-        error_log('Error getting villages: ' . $e->getMessage());
-        return [];
-    }
-}
-
-/**
- * Generate cache key for address data
- * @param string $type Data type (provinces, regencies, districts, villages)
- * @param int|null $parent_id Parent ID (for hierarchical data)
- * @return string Cache key
- */
-function generate_address_cache_key($type, $parent_id = null) {
-    $key = "address_{$type}";
-    if ($parent_id !== null) {
-        $key .= "_{$parent_id}";
-    }
-    return $key;
-}
-
-/**
- * Get cached address data or fetch from database using max_date tracking
- * @param string $type Data type
- * @param int|null $parent_id Parent ID
- * @param array $max_dates Current max dates
- * @return array Address data
- */
-function get_cached_address_data($type, $parent_id = null, $max_dates = null) {
-    if ($max_dates === null) {
-        $max_dates = get_address_max_dates();
-    }
-
-    $cache_key = generate_address_cache_key($type, $parent_id);
-    $max_date_key = "address_max_date_{$type}";
-    $cache_time_key = "address_cache_time_{$type}";
-
-    // Get stored data and max_date from cache
-    $stored_max_date = isset($_COOKIE[$max_date_key]) ? $_COOKIE[$max_date_key] : null;
-    $stored_cache_time = isset($_COOKIE[$cache_time_key]) ? (int)$_COOKIE[$cache_time_key] : 0;
-
-    $current_max_date = isset($max_dates[$type]['max_date']) ? $max_dates[$type]['max_date'] : null;
-    $current_time = time();
-
-    // Check if cache is still valid (24 hours or max_date unchanged)
-    $cache_valid = ($stored_max_date === $current_max_date) &&
-                   ($current_time - $stored_cache_time < 86400); // 24 hours
-
-    if ($cache_valid && isset($_COOKIE[$cache_key])) {
-        // Return cached data
-        $cached_data = json_decode($_COOKIE[$cache_key], true);
-        if ($cached_data !== null) {
-            return $cached_data;
-        }
-    }
-
-    // Fetch fresh data from database
-    $data = [];
-    switch ($type) {
-        case 'provinsi':
-            $data = get_provinces_data();
-            break;
-        case 'kabkota':
-            $data = get_regencies_data($parent_id);
-            break;
-        case 'kecamatan':
-            $data = get_districts_data($parent_id);
-            break;
-        case 'kelurahan':
-            $data = get_villages_data($parent_id);
-            break;
-    }
-
-    // Store in cache (using cookies for simplicity - in production, consider localStorage or sessionStorage)
-    setcookie($cache_key, json_encode($data), time() + 86400, '/'); // 24 hours
-    setcookie($max_date_key, $current_max_date, time() + 86400, '/');
-    setcookie($cache_time_key, $current_time, time() + 86400, '/');
-
-    return $data;
-}
-
-/**
- * Clear address data cache
- * @param string|null $type Specific type to clear, null for all
- */
-function clear_address_cache($type = null) {
-    $cache_keys = ['provinsi', 'kabkota', 'kecamatan', 'kelurahan'];
-
-    if ($type !== null) {
-        $cache_keys = [$type];
-    }
-
-    foreach ($cache_keys as $key) {
-        $cache_key = generate_address_cache_key($key);
-        $max_date_key = "address_max_date_{$key}";
-        $cache_time_key = "address_cache_time_{$key}";
-
-        setcookie($cache_key, '', time() - 3600, '/');
-        setcookie($max_date_key, '', time() - 3600, '/');
-        setcookie($cache_time_key, '', time() - 3600, '/');
-    }
-}
-
-/**
- * Get address data with caching (JSON response for API)
- * @param string $type Data type
- * @param int|null $parent_id Parent ID
- * @return string JSON response
- */
-function get_address_data_json($type, $parent_id = null) {
-    try {
-        $max_dates = get_address_max_dates();
-        $data = get_cached_address_data($type, $parent_id, $max_dates);
-
-        return json_encode([
-            'success' => true,
-            'data' => $data,
-            'cached' => true,
-            'max_date' => isset($max_dates[$type]) ? $max_dates[$type]['max_date'] : null,
-            'record_count' => isset($max_dates[$type]) ? $max_dates[$type]['record_count'] : 0
-        ]);
-    } catch (Exception $e) {
-        return json_encode([
-            'success' => false,
-            'message' => 'Error fetching address data',
-            'error' => $e->getMessage()
-        ]);
-    }
-}
 ?>

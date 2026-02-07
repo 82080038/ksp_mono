@@ -16,7 +16,7 @@ if ($auth->check()) {
     $action = isset($_GET['action']) ? $_GET['action'] : 'index';
     
     // Daftar modul yang valid
-    $validModuls = ['anggota', 'simpanan', 'pinjaman', 'laporan', 'pengaturan', 'dashboard'];
+    $validModuls = ['anggota', 'simpanan', 'pinjaman', 'laporan', 'pengaturan', 'dashboard', 'coop_details'];
     
     // Jika modul tidak valid, gunakan dashboard sebagai default
     if (!in_array($modul, $validModuls)) {

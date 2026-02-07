@@ -1,20 +1,42 @@
 <?php
 require_once __DIR__ . '/../../app/bootstrap.php';
-// List provinces (alamat_db, read-only)
+
+// Konfigurasi pagination
+$limit = 50;
+$page = max(1, $_GET['page'] ?? 1);
+$offset = ($page - 1) * $limit;
+
 header('Content-Type: application/json');
+header('Cache-Control: public, max-age=3600'); // Cache 1 jam
 
 try {
     $cfg = app_config('alamat_db');
     $dsn = sprintf('mysql:host=%s;dbname=%s;charset=%s', $cfg['host'], $cfg['name'], $cfg['charset']);
+    
     $pdo = new PDO($dsn, $cfg['user'], $cfg['pass'], [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,
     ]);
-    $rows = $pdo->query('SELECT id, name AS nama FROM provinsi ORDER BY name ASC')->fetchAll();
-    echo json_encode(['success' => true, 'data' => $rows]);
+    
+    // Query dengan pagination
+    $stmt = $pdo->prepare('SELECT id, name AS nama FROM provinsi ORDER BY name ASC LIMIT ? OFFSET ?');
+    $stmt->execute([$limit, $offset]);
+    $rows = $stmt->fetchAll();
+    
+    echo json_encode([
+        'success' => true, 
+        'data' => $rows,
+        'pagination' => [
+            'page' => $page,
+            'limit' => $limit
+        ]
+    ]);
 } catch (Throwable $e) {
     error_log('provinces error: '.$e->getMessage());
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Gagal memuat provinsi']);
+    echo json_encode([
+        'success' => false, 
+        'message' => 'Gagal memuat provinsi'
+    ]);
 }

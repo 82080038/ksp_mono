@@ -26,6 +26,13 @@
                         <i class="bi bi-cash-coin me-1"></i> Pinjaman
                     </a>
                 </li>
+                <?php if (has_permission('manage_cooperative')): ?>
+                <li class="nav-item">
+                    <a class="nav-link <?php echo (isset($_GET['modul']) && $_GET['modul'] === 'coop_details') ? 'active' : ''; ?>" href="?modul=coop_details">
+                        <i class="bi bi-building me-1"></i> Detail Koperasi
+                    </a>
+                </li>
+                <?php endif; ?>
             </ul>
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item dropdown">

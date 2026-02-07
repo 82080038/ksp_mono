@@ -10,13 +10,13 @@ class Auth
 
     public function login(string $username, string $password): bool
     {
-        $stmt = $this->db->prepare('SELECT id, username, password_hash, status FROM pengguna WHERE username = :u LIMIT 1');
+        $stmt = $this->db->prepare('SELECT id, username, sandi_hash, status FROM pengguna WHERE username = :u LIMIT 1');
         $stmt->execute([':u' => $username]);
         $user = $stmt->fetch();
         if (!$user) {
             return false;
         }
-        if (!password_verify($password, $user['password_hash'])) {
+        if (!password_verify($password, $user['sandi_hash'])) {
             return false;
         }
         if (isset($user['status']) && $user['status'] !== 'active') {

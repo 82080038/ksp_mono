@@ -90,49 +90,46 @@ $redirectUrl = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) : 
     <div class="card-body p-4">
         <h5 class="mb-3">Masuk</h5>
         <p class="text-muted small">Gunakan akun internal untuk melanjutkan.</p>
-        <form id="loginForm" action="/ksp_mono/login_action.php<?php echo $redirectUrl ? '?redirect=' . urlencode($redirectUrl) : ''; ?>" method="post" class="needs-validation" novalidate>
-            <div class="mb-3">
-                <label class="form-label">Username</label>
-                <input type="text" name="username" class="form-control" placeholder="mis: admin" required>
+        <form id="loginForm" action="/ksp_mono/login_action.php<?php echo $redirectUrl ? '?redirect=' . urlencode($redirectUrl) : ''; ?>" method="post" novalidate>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="username" id="usernameInput" required placeholder="Username">
+                <div class="invalid-feedback">Username wajib diisi</div>
+                <label for="usernameInput"><i class="bi bi-person"></i> Username</label>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" name="password" id="passwordInput" required placeholder="Password">
+                <div class="invalid-feedback">Password wajib diisi</div>
+                <label for="passwordInput"><i class="bi bi-lock"></i> Password</label>
             </div>
-            <div class="d-grid mb-3">
-                <button type="submit" class="btn btn-primary">Masuk</button>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-box-arrow-in-right"></i> Login</button>
             </div>
-            <div class="dev-hint small text-muted">Dev: admin/admin123 atau user/user123</div>
+            <div id="loginError" class="alert alert-danger mt-3 d-none"></div>
         </form>
+        <script>
+        // Login form validation
+        $('#loginForm').on('submit', function(e) {
+            const form = this;
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            $(form).addClass('was-validated');
+        });
+        
+        // Handle login errors
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('error')) {
+            $('#loginError').text(decodeURIComponent(urlParams.get('error'))).removeClass('d-none');
+        }
+        </script>
         <div class="mt-3 d-flex flex-column gap-2">
             <a class="text-decoration-none" href="/ksp_mono/register_koperasi.php">Daftarkan Koperasi Baru</a>
             <a class="text-decoration-none" href="/ksp_mono/register_user.php">Registrasi Admin/User (pilih koperasi)</a>
         </div>
-        <div id="alert" class="alert alert-danger mt-3 d-none" role="alert"></div>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script>
-$(function(){
-    $('#loginForm').on('submit', function(e){
-        e.preventDefault();
-        $('#alert').addClass('d-none');
-        $.ajax({
-            url: '/ksp_mono/login_action.php<?php echo $redirectUrl ? '?redirect=' . urlencode($redirectUrl) : ''; ?>',
-            method: 'POST',
-            data: $(this).serialize(),
-            dataType: 'json'
-        }).done(function(res){
-            if(res.success){
-                window.location = res.redirect || '/ksp_mono/';
-            } else {
-                $('#alert').removeClass('d-none').text(res.message || 'Login gagal');
-            }
-        }).fail(function(){
-            $('#alert').removeClass('d-none').text('Terjadi kesalahan.');
-        });
-    });
-});
-</script>
 </body>
 </html>

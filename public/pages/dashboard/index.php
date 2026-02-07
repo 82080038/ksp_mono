@@ -24,7 +24,7 @@ $user = $auth->user() ?: [];
                                 <i class="bi bi-check-lg"></i>
                             </span>
                         </div>
-                        <h4 class="h5 mb-1">KSP-PEB</h4>
+                        <h4 class="h5 mb-1">ksp_mono</h4>
                         <p class="text-muted small">Sistem Informasi Koperasi</p>
                     </div>
                     

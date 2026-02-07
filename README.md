@@ -1,4 +1,4 @@
-# Aplikasi Koperasi Simpan Pinjam Terpadu (KSP-Peb)
+# Aplikasi Koperasi Simpan Pinjam Terpadu (ksp_mono)
 
 Aplikasi manajemen koperasi modern dengan fitur lengkap untuk mengelola simpanan, pinjaman, dan operasional koperasi.
 

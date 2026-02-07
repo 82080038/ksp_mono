@@ -1,4 +1,4 @@
-# Aturan Proyek KSP-PEB
+# Aturan Proyek ksp_mono
 
 ## Database
 Aplikasi ini menggunakan dua database terpisah:

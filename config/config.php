@@ -16,7 +16,7 @@ return [
         'charset' => 'utf8mb4',
     ],
     'app' => [
-        'name' => 'KSP-Peb',
+        'name' => 'ksp_mono',
         'env' => 'development',
         'debug' => true,
     ],

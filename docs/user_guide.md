@@ -44,7 +44,7 @@ Panduan ini akan terupdate secara dinamis seiring dengan pengembangan aplikasi K
 
 ### **🔐 Login ke Aplikasi**
 
-1. **Buka Browser:** Akses `http://localhost/ksp_peb/login.php`
+1. **Buka Browser:** Akses `http://localhost/ksp_mono/login.php`
 2. **Masukkan Kredensial:**
    - **Username:** Username yang terdaftar
    - **Password:** Password yang terdaftar

@@ -6,7 +6,7 @@
                 <div class="row align-items-center">
                     <div class="col-md-6 text-center text-md-start">
                         <span class="text-muted">
-                            &copy; <?php echo date('Y'); ?> KSP-PEB. All rights reserved.
+                            &copy; <?php echo date('Y'); ?> ksp_mono. All rights reserved.
                         </span>
                     </div>
                     <div class="col-md-6 text-center text-md-end">

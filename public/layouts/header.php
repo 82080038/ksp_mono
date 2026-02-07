@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="Sistem Informasi Koperasi Simpan Pinjam KSP-PEB">
-    <meta name="author" content="KSP-PEB">
+    <meta name="description" content="Sistem Informasi Koperasi Simpan Pinjam ksp_mono">
+    <meta name="author" content="ksp_mono">
     <meta name="theme-color" content="#4361ee">
     
-    <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' - KSP-PEB' : 'KSP-PEB - Koperasi Simpan Pinjam'; ?></title>
+    <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' - ksp_mono' : 'ksp_mono - Koperasi Simpan Pinjam'; ?></title>
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏦</text></svg>">
@@ -340,7 +340,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#4e73df; position:fixed; top:0; left:0; right:0; z-index:1040; height:60px;">
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="/ksp_mono/">KSP-PEB</a>
+            <a class="navbar-brand fw-bold" href="/ksp_mono/">ksp_mono</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar" aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>

@@ -1,5 +1,5 @@
 // Simple no-op service worker to avoid 404 and enable future offline features
-const VERSION = 'ksp-peb-sw-v1';
+const VERSION = 'ksp_mono-sw-v1';
 
 self.addEventListener('install', (event) => {
   // Activate immediately

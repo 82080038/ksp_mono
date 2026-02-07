@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test AddressCache</title>
+</head>
+<body>
+    <h1>Testing AddressCache</h1>
+    <div id="result"></div>
+
+    <script src="/ksp_mono/public/assets/js/address-cache.js"></script>
+    <script>
+        // Test if AddressCache is defined
+        setTimeout(() => {
+            const result = document.getElementById('result');
+            if (typeof AddressCache !== 'undefined') {
+                result.innerHTML = '<p style="color: green;">✅ AddressCache is defined</p>';
+                if (typeof AddressCache.getData === 'function') {
+                    result.innerHTML += '<p style="color: green;">✅ AddressCache.getData is a function</p>';
+                } else {
+                    result.innerHTML += '<p style="color: red;">❌ AddressCache.getData is not a function</p>';
+                }
+            } else {
+                result.innerHTML = '<p style="color: red;">❌ AddressCache is not defined</p>';
+            }
+        }, 100);
+    </script>
+</body>
+</html>

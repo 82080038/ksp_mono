@@ -1,4 +1,4 @@
-# Aplikasi Koperasi Simpan Pinjam Terpadu (KSP-Peb)
+# Aplikasi Koperasi Simpan Pinjam Terpadu (ksp_mono)
 
 Aplikasi manajemen koperasi modern dengan fitur lengkap untuk mengelola simpanan, pinjaman, dan operasional koperasi.
 
@@ -25,8 +25,8 @@ Aplikasi manajemen koperasi modern dengan fitur lengkap untuk mengelola simpanan
 
 1. Clone repositori ini:
    ```bash
-   git clone https://github.com/82080038/ksp_peb.git
-   cd ksp_peb
+   git clone https://github.com/82080038/ksp_mono.git
+   cd ksp_mono
    ```
 
 2. Salin file konfigurasi environment:

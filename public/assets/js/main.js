@@ -1,5 +1,5 @@
 /**
- * KSP-PEB Main JavaScript
+ * ksp_mono Main JavaScript
  * Berkas utama untuk fungsionalitas umum aplikasi
  */
 

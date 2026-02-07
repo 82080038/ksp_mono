@@ -1,8 +1,8 @@
 {
-  "name": "KSP-PEB",
-  "short_name": "KSP-PEB",
+  "name": "ksp_mono",
+  "short_name": "ksp_mono",
   "lang": "id",
-  "description": "Sistem Informasi Koperasi Simpan Pinjam KSP-PEB",
+  "description": "Sistem Informasi Koperasi Simpan Pinjam ksp_mono",
   "start_url": "/ksp_mono/public/",
   "display": "standalone",
   "background_color": "#ffffff",

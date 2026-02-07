@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test AddressCache Methods</title>
+    <script src="/ksp_mono/public/assets/js/address-cache.js"></script>
+</head>
+<body>
+    <h1>Testing AddressCache Methods</h1>
+    <div id="result"></div>
+
+    <script>
+        setTimeout(() => {
+            const result = document.getElementById('result');
+
+            if (typeof window.AddressCache === 'undefined') {
+                result.innerHTML = '<p style="color: red;">❌ window.AddressCache is undefined</p>';
+                return;
+            }
+
+            result.innerHTML = '<p style="color: green;">✅ window.AddressCache exists</p>';
+            result.innerHTML += '<p>Type: ' + typeof window.AddressCache + '</p>';
+
+            if (window.AddressCache.constructor) {
+                result.innerHTML += '<p>Constructor: ' + window.AddressCache.constructor.name + '</p>';
+            }
+
+            // Check available methods
+            const methods = Object.getOwnPropertyNames(window.AddressCache.__proto__).filter(name => {
+                return typeof window.AddressCache[name] === 'function';
+            });
+
+            result.innerHTML += '<p>Available methods: ' + methods.join(', ') + '</p>';
+
+            // Check specifically for getData
+            if (typeof window.AddressCache.getData === 'function') {
+                result.innerHTML += '<p style="color: green;">✅ getData method exists</p>';
+            } else {
+                result.innerHTML += '<p style="color: red;">❌ getData method does not exist</p>';
+            }
+
+            // Try to call getData to see what happens
+            try {
+                const testCall = window.AddressCache.getData('provinsi', null, { forceRefresh: false });
+                result.innerHTML += '<p style="color: green;">✅ getData call initiated successfully</p>';
+                result.innerHTML += '<p>Return type: ' + typeof testCall + '</p>';
+
+                if (testCall && typeof testCall.then === 'function') {
+                    result.innerHTML += '<p style="color: green;">✅ getData returns a Promise</p>';
+                } else {
+                    result.innerHTML += '<p style="color: yellow;">⚠️ getData does not return a Promise</p>';
+                }
+            } catch (error) {
+                result.innerHTML += '<p style="color: red;">❌ Error calling getData: ' + error.message + '</p>';
+            }
+
+        }, 1000); // Wait 1 second for script to load
+    </script>
+</body>
+</html>

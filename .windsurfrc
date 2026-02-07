@@ -1,0 +1,116 @@
+# Windsurf Project Configuration - KSP Mono Application
+# This file is automatically read by Windsurf when opening the project
+# Ensures consistent development environment setup
+
+# Project Information
+project:
+  name: "KSP Mono - Sistem Manajemen Koperasi Simpan Pinjam"
+  version: "1.0.0"
+  description: "Modern cooperative savings and loan management system"
+
+# Development Environment Setup
+development:
+  # Primary setup guide - READ FIRST after git pull
+  setup_guide: "docs/KNOWLEDGE_TRANSFER_PACKAGE.md"
+
+  # Key configuration files
+  config_files:
+    - "config/config.php"           # Database configuration
+    - ".htaccess"                   # Apache rewrite rules
+    - "sql/koperasi_db.sql"         # Main database schema
+    - "sql/alamat_db_max_date_schema.sql" # Address database triggers
+
+  # Critical implementation files
+  implementation_files:
+    - "public/assets/js/address-cache-test.js"    # Sophisticated caching system
+    - "public/register_koperasi.php"             # Main registration form
+    - "app/helpers.php"                          # Core utility functions
+    - "docs/ADDRESS_CACHING_STRATEGY.md"         # Caching documentation
+
+# Memory Context for Windsurf AI Assistant
+memory_context:
+  # Key knowledge areas - read these first for context
+  primary_knowledge:
+    - "docs/KNOWLEDGE_TRANSFER_PACKAGE.md"       # Complete project overview
+    - "docs/ADDRESS_CACHING_STRATEGY.md"         # Caching system details
+    - "docs/DOKUMENTASI_LENGKAP.md"             # Full documentation
+
+  # Recent implementations (most important)
+  recent_implementations:
+    - "Sophisticated address data caching with hierarchical per-ID storage"
+    - "Indonesian phone number formatting with visual feedback"
+    - "Real-time form validation with comprehensive error handling"
+    - "localStorage capacity monitoring and resource management"
+
+  # Architecture decisions
+  architecture:
+    - "Multi-database architecture: koperasi_db + alamat_db"
+    - "Session-based authentication with RBAC"
+    - "AJAX-driven frontend with jQuery"
+    - "Bootstrap 5 responsive design"
+
+# Development Workflow
+workflow:
+  # After git pull - do these first
+  post_pull_steps:
+    1: "Read docs/KNOWLEDGE_TRANSFER_PACKAGE.md"
+    2: "Verify database connections (config/config.php)"
+    3: "Check address caching system functionality"
+    4: "Test form validation and phone number formatting"
+    5: "Verify localStorage caching behavior"
+
+  # Key commands for development
+  common_commands:
+    database_setup: "mysql -u root -proot < sql/koperasi_db.sql && mysql -u root -proot < sql/alamat_db_max_date_schema.sql"
+    cache_testing: "Open browser console and check localStorage for address_cache_test_* keys"
+    validation_testing: "Test phone input with '081234567890' - should format to '6281-2345-6789-0'"
+
+# Quality Assurance
+qa:
+  # Must verify these work after any changes
+  critical_checks:
+    - "Address dropdown cascade (Province → Regency → District → Village)"
+    - "Phone number formatting with Indonesian standards"
+    - "Form validation (required fields, phone format, NPWP)"
+    - "Caching system (localStorage capacity, data validation)"
+    - "Database connections and triggers"
+
+# Support Information
+support:
+  documentation_root: "docs/"
+  primary_docs:
+    - "KNOWLEDGE_TRANSFER_PACKAGE.md"    # Setup & transfer guide
+    - "ADDRESS_CACHING_STRATEGY.md"     # Technical implementation
+    - "DOKUMENTASI_LENGKAP.md"          # Complete system docs
+
+  troubleshooting:
+    cache_issues: "Check localStorage availability and capacity"
+    validation_errors: "Verify phone format (62xxxxxxxxx) and field requirements"
+    database_errors: "Check connection config and table schemas"
+
+# Project Health Indicators
+health_checks:
+  # These should all pass for healthy development
+  indicators:
+    - "Database connections working"
+    - "Address APIs returning data"
+    - "Caching system storing/retrieving data"
+    - "Form validation catching errors"
+    - "Phone formatting working correctly"
+
+# Version Control Notes
+git:
+  important_branches:
+    - "main"          # Production-ready code
+    - "development"   # Active development branch
+
+  key_files_to_commit:
+    - "docs/KNOWLEDGE_TRANSFER_PACKAGE.md"     # Always update with changes
+    - "docs/ADDRESS_CACHING_STRATEGY.md"      # Update with cache changes
+    - "config/config.php"                     # Never commit real credentials
+    - "sql/*.sql"                            # Database schemas
+
+# Final Reminder
+reminder: |
+  IMPORTANT: Always read docs/KNOWLEDGE_TRANSFER_PACKAGE.md first after git pull.
+  This ensures you have all necessary context for development continuation.

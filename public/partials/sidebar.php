@@ -4,7 +4,7 @@
             <div class="sidebar-brand-icon d-flex align-items-center justify-content-center me-2">
                 <i class="bi bi-bank"></i>
             </div>
-            <div class="sidebar-brand-text fw-bold">KSP-PEB</div>
+            <div class="sidebar-brand-text fw-bold">ksp_mono</div>
         </a>
         <button class="btn btn-link text-white d-lg-none ms-auto p-0 sidebar-toggle" aria-label="Toggle sidebar">
             <i class="bi bi-list fs-4"></i>

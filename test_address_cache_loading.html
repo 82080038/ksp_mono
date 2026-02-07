@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test AddressCache Loading</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="/ksp_mono/public/assets/js/address-cache.js"></script>
+</head>
+<body>
+    <h1>Testing AddressCache Loading</h1>
+    <div id="result"></div>
+
+    <script>
+        $(function() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Testing AddressCache loading...<br>';
+
+            // Test immediate check
+            setTimeout(() => {
+                if (window.AddressCache && typeof window.AddressCache.getData === 'function') {
+                    resultDiv.innerHTML += '✅ AddressCache loaded immediately<br>';
+                } else {
+                    resultDiv.innerHTML += '❌ AddressCache not loaded immediately<br>';
+                }
+
+                // Test the improved waiting mechanism
+                const waitForAddressCache = (retries = 10, delay = 500) => {
+                    return new Promise((resolve, reject) => {
+                        let attempts = 0;
+
+                        const checkCache = () => {
+                            attempts++;
+                            resultDiv.innerHTML += `Checking attempt ${attempts}...<br>`;
+
+                            if (window.AddressCache &&
+                                typeof window.AddressCache === 'object' &&
+                                typeof window.AddressCache.getData === 'function') {
+
+                                resultDiv.innerHTML += `✅ AddressCache loaded successfully on attempt ${attempts}<br>`;
+                                resolve();
+                                return;
+                            }
+
+                            if (attempts >= retries) {
+                                resultDiv.innerHTML += `❌ AddressCache failed to load after ${retries} attempts<br>`;
+                                reject(new Error('AddressCache not loaded within timeout'));
+                                return;
+                            }
+
+                            setTimeout(checkCache, delay);
+                        };
+
+                        setTimeout(checkCache, 100);
+                    });
+                };
+
+                waitForAddressCache().then(() => {
+                    resultDiv.innerHTML += '🎉 AddressCache loading test completed successfully!<br>';
+                }).catch(error => {
+                    resultDiv.innerHTML += `💥 Error: ${error.message}<br>`;
+                });
+
+            }, 500);
+        });
+    </script>
+</body>
+</html>

@@ -14,7 +14,7 @@ require_once __DIR__ . '/../app/bootstrap.php';
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Registrasi Admin/User - KSP-PEB</title>
+    <title>Registrasi Admin/User - ksp_mono</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <style>
@@ -53,6 +53,7 @@ require_once __DIR__ . '/../app/bootstrap.php';
                     <small class="text-white-50">Pilih koperasi yang sudah terdaftar. Jika belum ada, daftarkan koperasi terlebih dahulu.</small>
                 </div>
                 <div class="card-body p-4">
+                    <form id="formRegisterUser" action="register_user_process.php" method="POST">
                     <h6 class="text-primary mb-3"><i class="bi bi-building"></i> Pilih Koperasi</h6>
                     <div class="form-floating mb-3">
                         <select class="form-select" name="koperasi_id" id="koperasiSelect" required>
@@ -104,6 +105,7 @@ require_once __DIR__ . '/../app/bootstrap.php';
                         <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-person-add"></i> Daftarkan User</button>
                     </div>
                     <div id="alertUser" class="alert alert-danger mt-3 d-none" role="alert"></div>
+                    </form>
                 </div>
                 <div class="card-footer bg-white text-center">
                     <a href="/ksp_mono/login.php">Kembali ke Login</a>

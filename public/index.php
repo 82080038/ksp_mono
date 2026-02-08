@@ -58,7 +58,7 @@ if ($auth->check()) {
 }
 
 // Jika belum login, arahkan ke halaman login dengan path tanpa /public
-$loginUrl = '/ksp_mono/login.php';
+$loginUrl = '/ksp_mono/public/login.php';
 
 // Tambahkan pesan redirect jika ada
 if (isset($_GET['redirect'])) {

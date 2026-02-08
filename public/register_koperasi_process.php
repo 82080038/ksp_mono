@@ -219,19 +219,14 @@ try {
     // Step 1: Create admin user terlebih dahulu
     $password_hash = password_hash($admin_password, PASSWORD_DEFAULT);
 
-    $stmt = $db->prepare('
-        INSERT INTO pengguna (
-            username, sandi_hash, sumber_pengguna_id, status, dibuat_pada
-        ) VALUES (
-            :username, :sandi_hash, :sumber_pengguna_id, :status, NOW()
-        )
-    ');
+    $stmt = $db->prepare('INSERT INTO pengguna (username, sandi_hash, sumber_pengguna_id, status, hp, dibuat_pada) VALUES (:username, :sandi_hash, :sumber_pengguna_id, :status, :hp, NOW())');
 
     $stmt->execute([
         ':username' => $admin_username,
         ':sandi_hash' => $password_hash,
         ':sumber_pengguna_id' => 1, // Default admin source
-        ':status' => 'active' // AUTO ACTIVATE for development
+        ':status' => 'active', // AUTO ACTIVATE for development
+        ':hp' => $admin_hp
     ]);
 
     $user_id = $db->lastInsertId();
@@ -299,17 +294,7 @@ try {
     // Step 3: Insert cooperative data
     $jenis_koperasi_json = json_encode([$jenis_koperasi]);
 
-    $stmt = $db->prepare('
-        INSERT INTO koperasi_tenant (
-            nama_koperasi, jenis_koperasi, alamat_legal, 
-            province_id, kabkota_id, kecamatan_id, kelurahan_id,
-            status_badan_hukum, dibuat_pada
-        ) VALUES (
-            :nama, :jenis, :alamat_legal,
-            :province_id, :regency_id, :district_id, :village_id,
-            "belum_terdaftar", NOW()
-        )
-    ');
+    $stmt = $db->prepare('INSERT INTO koperasi_tenant (nama_koperasi, jenis_koperasi, alamat_legal, provinsi_id, kabkota_id, kecamatan_id, kelurahan_id, status_badan_hukum, dibuat_pada) VALUES (:nama, :jenis, :alamat_legal, :province_id, :regency_id, :district_id, :village_id, "belum_terdaftar", NOW())');
 
     $stmt->execute([
         ':nama' => $nama_koperasi,
@@ -368,17 +353,17 @@ try {
     $db->commit();
 
     $response['success'] = true;
-    $response['message'] = 'Koperasi dan admin berhasil didaftarkan. Anda akan diarahkan ke dashboard.';
-    $response['redirect'] = '/ksp_mono/public/dashboard.php';
+    $response['message'] = 'Koperasi dan admin berhasil didaftarkan. Silakan login untuk melanjutkan.';
+    $response['redirect'] = '/ksp_mono/public/login.php';
     $response['cooperative_id'] = $cooperative_id;
     $response['user_id'] = $user_id;
-    $response['auto_login'] = true; // Indicate auto-login success
+    $response['auto_login'] = false; // Tidak auto-login, redirect ke login
 
 } catch (Exception $e) {
     // Rollback transaction on error
     $db->rollBack();
     error_log('Cooperative registration error: ' . $e->getMessage());
-    $response['message'] = 'Terjadi kesalahan dalam penyimpanan data';
+    $response['message'] = 'Terjadi kesalahan dalam penyimpanan data: ';
 }
 
 // Log performance

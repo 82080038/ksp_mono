@@ -1,9 +1,9 @@
 /*M!999999\- enable the sandbox mode */ 
--- MariaDB dump 10.19  Distrib 10.6.23-MariaDB, for debian-linux-gnu (x86_64)
+-- MariaDB dump 10.19  Distrib 10.11.14-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: koperasi_db
 -- ------------------------------------------------------
--- Server version	10.6.23-MariaDB-0ubuntu0.22.04.1
+-- Server version	10.11.14-MariaDB-0ubuntu0.24.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -46,7 +46,26 @@ CREATE TABLE `akuntansi_jenis` (
 
 LOCK TABLES `akuntansi_jenis` WRITE;
 /*!40000 ALTER TABLE `akuntansi_jenis` DISABLE KEYS */;
-INSERT INTO `akuntansi_jenis` VALUES (1,0,'1000','Kas','asset',NULL,1,'2026-02-03 14:13:20'),(2,0,'1100','Bank','asset',NULL,1,'2026-02-03 14:13:20'),(3,0,'2000','Simpanan Anggota','liability',NULL,1,'2026-02-03 14:13:20'),(4,0,'2100','Pinjaman Anggota','asset',NULL,1,'2026-02-03 14:13:20'),(5,0,'3000','Modal','equity',NULL,1,'2026-02-03 14:13:20'),(6,0,'4000','Pendapatan Bunga','revenue',NULL,1,'2026-02-03 14:13:20'),(7,0,'5000','Beban Bunga','expense',NULL,1,'2026-02-03 14:13:20'),(8,0,'5100','Beban Operasional','expense',NULL,1,'2026-02-03 14:13:20'),(10,4,'1000','Kas','asset',NULL,1,'2026-02-04 17:30:29'),(11,4,'1100','Bank','asset',NULL,1,'2026-02-04 17:30:29'),(12,4,'2000','Simpanan Anggota','liability',NULL,1,'2026-02-04 17:30:29'),(13,4,'2100','Pinjaman Anggota','asset',NULL,1,'2026-02-04 17:30:29'),(14,4,'3000','Modal','equity',NULL,1,'2026-02-04 17:30:29'),(15,4,'3100','Cadangan','equity',NULL,1,'2026-02-04 17:30:29'),(16,4,'4000','Pendapatan Bunga','revenue',NULL,1,'2026-02-04 17:30:29'),(17,4,'4100','Pendapatan Operasional','revenue',NULL,1,'2026-02-04 17:30:29'),(18,4,'5000','Beban Bunga','expense',NULL,1,'2026-02-04 17:30:29'),(19,4,'5100','Beban Operasional','expense',NULL,1,'2026-02-04 17:30:29'),(20,4,'5200','Beban Administrasi','expense',NULL,1,'2026-02-04 17:30:29');
+INSERT INTO `akuntansi_jenis` VALUES
+(1,0,'1000','Kas','asset',NULL,1,'2026-02-03 14:13:20'),
+(2,0,'1100','Bank','asset',NULL,1,'2026-02-03 14:13:20'),
+(3,0,'2000','Simpanan Anggota','liability',NULL,1,'2026-02-03 14:13:20'),
+(4,0,'2100','Pinjaman Anggota','asset',NULL,1,'2026-02-03 14:13:20'),
+(5,0,'3000','Modal','equity',NULL,1,'2026-02-03 14:13:20'),
+(6,0,'4000','Pendapatan Bunga','revenue',NULL,1,'2026-02-03 14:13:20'),
+(7,0,'5000','Beban Bunga','expense',NULL,1,'2026-02-03 14:13:20'),
+(8,0,'5100','Beban Operasional','expense',NULL,1,'2026-02-03 14:13:20'),
+(10,4,'1000','Kas','asset',NULL,1,'2026-02-04 17:30:29'),
+(11,4,'1100','Bank','asset',NULL,1,'2026-02-04 17:30:29'),
+(12,4,'2000','Simpanan Anggota','liability',NULL,1,'2026-02-04 17:30:29'),
+(13,4,'2100','Pinjaman Anggota','asset',NULL,1,'2026-02-04 17:30:29'),
+(14,4,'3000','Modal','equity',NULL,1,'2026-02-04 17:30:29'),
+(15,4,'3100','Cadangan','equity',NULL,1,'2026-02-04 17:30:29'),
+(16,4,'4000','Pendapatan Bunga','revenue',NULL,1,'2026-02-04 17:30:29'),
+(17,4,'4100','Pendapatan Operasional','revenue',NULL,1,'2026-02-04 17:30:29'),
+(18,4,'5000','Beban Bunga','expense',NULL,1,'2026-02-04 17:30:29'),
+(19,4,'5100','Beban Operasional','expense',NULL,1,'2026-02-04 17:30:29'),
+(20,4,'5200','Beban Administrasi','expense',NULL,1,'2026-02-04 17:30:29');
 /*!40000 ALTER TABLE `akuntansi_jenis` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,6 +130,33 @@ LOCK TABLES `buku_besar` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `form_validation_errors`
+--
+
+DROP TABLE IF EXISTS `form_validation_errors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `form_validation_errors` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `input_value` text DEFAULT NULL,
+  `field_type` varchar(50) DEFAULT NULL,
+  `error_type` varchar(50) DEFAULT NULL,
+  `user_ip` varchar(45) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `form_validation_errors`
+--
+
+LOCK TABLES `form_validation_errors` WRITE;
+/*!40000 ALTER TABLE `form_validation_errors` DISABLE KEYS */;
+/*!40000 ALTER TABLE `form_validation_errors` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `izin_modul`
 --
 
@@ -122,6 +168,7 @@ CREATE TABLE `izin_modul` (
   `name` varchar(100) NOT NULL,
   `description` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `is_active` tinyint(1) DEFAULT 1,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -133,7 +180,25 @@ CREATE TABLE `izin_modul` (
 
 LOCK TABLES `izin_modul` WRITE;
 /*!40000 ALTER TABLE `izin_modul` DISABLE KEYS */;
-INSERT INTO `izin_modul` VALUES (1,'view_users','View user list','2026-02-03 14:13:20'),(2,'create_users','Create new users','2026-02-03 14:13:20'),(3,'edit_users','Edit user information','2026-02-03 14:13:20'),(4,'delete_users','Delete users','2026-02-03 14:13:20'),(5,'view_members','View members','2026-02-03 14:13:20'),(6,'manage_members','Manage member data','2026-02-03 14:13:20'),(7,'view_savings','View savings transactions','2026-02-03 14:13:20'),(8,'manage_savings','Manage savings','2026-02-03 14:13:20'),(9,'view_loans','View loan applications','2026-02-03 14:13:20'),(10,'manage_loans','Manage loans','2026-02-03 14:13:20'),(11,'view_accounts','View chart of accounts','2026-02-03 14:13:20'),(12,'manage_accounts','Manage accounting','2026-02-03 14:13:20'),(13,'view_reports','View reports','2026-02-03 14:13:20'),(14,'generate_reports','Generate financial reports','2026-02-03 14:13:20'),(15,'vote','Participate in voting','2026-02-03 14:13:20'),(16,'manage_votes','Manage voting sessions','2026-02-03 14:13:20'),(17,'view_audit','View audit logs','2026-02-03 14:13:20'),(18,'admin_access','Full administrative access','2026-02-03 14:13:20');
+INSERT INTO `izin_modul` VALUES
+(1,'view_users','View user list','2026-02-03 14:13:20',1),
+(2,'create_users','Create new users','2026-02-03 14:13:20',1),
+(3,'edit_users','Edit user information','2026-02-03 14:13:20',1),
+(4,'delete_users','Delete users','2026-02-03 14:13:20',1),
+(5,'view_members','View members','2026-02-03 14:13:20',1),
+(6,'manage_members','Manage member data','2026-02-03 14:13:20',1),
+(7,'view_savings','View savings transactions','2026-02-03 14:13:20',1),
+(8,'manage_savings','Manage savings','2026-02-03 14:13:20',1),
+(9,'view_loans','View loan applications','2026-02-03 14:13:20',1),
+(10,'manage_loans','Manage loans','2026-02-03 14:13:20',1),
+(11,'view_accounts','View chart of accounts','2026-02-03 14:13:20',1),
+(12,'manage_accounts','Manage accounting','2026-02-03 14:13:20',1),
+(13,'view_reports','View reports','2026-02-03 14:13:20',1),
+(14,'generate_reports','Generate financial reports','2026-02-03 14:13:20',1),
+(15,'vote','Participate in voting','2026-02-03 14:13:20',1),
+(16,'manage_votes','Manage voting sessions','2026-02-03 14:13:20',1),
+(17,'view_audit','View audit logs','2026-02-03 14:13:20',1),
+(18,'admin_access','Full administrative access','2026-02-03 14:13:20',1);
 /*!40000 ALTER TABLE `izin_modul` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -223,7 +288,12 @@ CREATE TABLE `konfigurasi` (
 
 LOCK TABLES `konfigurasi` WRITE;
 /*!40000 ALTER TABLE `konfigurasi` DISABLE KEYS */;
-INSERT INTO `konfigurasi` VALUES (1,'coop_name','Koperasi Simpan Pinjam','Nama koperasi','2026-02-03 14:13:20'),(2,'interest_rate_savings','3.5','Suku bunga simpanan tahunan (%)','2026-02-03 14:13:20'),(3,'interest_rate_loans','12.0','Suku bunga pinjaman tahunan (%)','2026-02-03 14:13:20'),(4,'penalty_rate','2.0','Denda keterlambatan (%) per hari','2026-02-03 14:13:20'),(5,'shu_distribution_ratio','70','Persentase SHU untuk anggota (%)','2026-02-03 14:13:20');
+INSERT INTO `konfigurasi` VALUES
+(1,'coop_name','Koperasi Simpan Pinjam','Nama koperasi','2026-02-03 14:13:20'),
+(2,'interest_rate_savings','3.5','Suku bunga simpanan tahunan (%)','2026-02-03 14:13:20'),
+(3,'interest_rate_loans','12.0','Suku bunga pinjaman tahunan (%)','2026-02-03 14:13:20'),
+(4,'penalty_rate','2.0','Denda keterlambatan (%) per hari','2026-02-03 14:13:20'),
+(5,'shu_distribution_ratio','70','Persentase SHU untuk anggota (%)','2026-02-03 14:13:20');
 /*!40000 ALTER TABLE `konfigurasi` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -292,7 +362,19 @@ CREATE TABLE `koperasi_jenis` (
 
 LOCK TABLES `koperasi_jenis` WRITE;
 /*!40000 ALTER TABLE `koperasi_jenis` DISABLE KEYS */;
-INSERT INTO `koperasi_jenis` VALUES (1,'Koperasi Simpan Pinjam (KSP)','Koperasi yang bergerak di bidang simpan pinjam untuk anggota, menyediakan layanan tabungan, kredit, dan jasa keuangan lainnya sesuai PP No. 7 Tahun 2021','KSP','finansial',1,'2026-02-04 07:36:54'),(2,'Koperasi Konsumsi','Koperasi yang bergerak di bidang pemenuhan kebutuhan konsumsi anggota, menyediakan barang dan jasa kebutuhan sehari-hari sesuai PP No. 7 Tahun 2021','KK','konsumsi',1,'2026-02-04 07:36:54'),(3,'Koperasi Produksi','Koperasi yang bergerak di bidang produksi barang/jasa anggota, mengelola pengolahan, pemasaran, dan distribusi hasil produksi sesuai PP No. 7 Tahun 2021','KP','produksi',1,'2026-02-04 07:36:54'),(4,'Koperasi Pemasaran','Koperasi yang bergerak di bidang pemasaran hasil produksi anggota, menyediakan layanan distribusi, penjualan, dan ekspor sesuai PP No. 7 Tahun 2021','KPAS','produksi',1,'2026-02-04 07:36:54'),(5,'Koperasi Jasa','Koperasi yang bergerak di bidang penyediaan jasa untuk anggota, seperti transportasi, komunikasi, konsultasi, dan jasa lainnya sesuai PP No. 7 Tahun 2021','KJ','jasa',1,'2026-02-04 07:36:54'),(6,'Koperasi Serba Usaha (KSU)','Koperasi yang menjalankan berbagai jenis usaha kombinasi dari beberapa jenis koperasi dalam satu organisasi sesuai PP No. 7 Tahun 2021','KSU','serba_usaha',1,'2026-02-04 07:36:54'),(7,'Koperasi Karyawan','Koperasi yang bergerak di bidang kesejahteraan karyawan perusahaan, menyediakan simpan pinjam, konsumsi, dan jasa untuk karyawan sesuai PP No. 7 Tahun 2021','KKAR','karyawan',1,'2026-02-04 09:19:02'),(8,'Koperasi Pertanian','Koperasi yang bergerak di bidang pertanian, menyediakan sarana produksi, pengolahan hasil, dan pemasaran produk pertanian sesuai PP No. 7 Tahun 2021','KOPERTA','produksi',1,'2026-02-04 09:20:25'),(9,'Koperasi Nelayan','Koperasi yang bergerak di bidang perikanan, menyediakan alat tangkap, pengolahan hasil, dan pemasaran hasil perikanan sesuai PP No. 7 Tahun 2021','KOPERNAL','produksi',1,'2026-02-04 09:20:25'),(10,'Koperasi Peternakan','Koperasi yang bergerak di bidang peternakan, menyediakan pakan, pengolahan, dan pemasaran hasil peternakan sesuai PP No. 7 Tahun 2021','KOPERTAK','produksi',1,'2026-02-04 09:20:25'),(11,'Koperasi Perdagangan','Koperasi yang bergerak di bidang perdagangan grosir dan eceran, menyediakan barang dagangan untuk anggota sesuai PP No. 7 Tahun 2021','KOPERDAG','konsumsi',1,'2026-02-04 09:20:25'),(12,'Koperasi Pondok Pesantren','Koperasi yang bergerak di lingkungan pondok pesantren, menyediakan kebutuhan santri dan wali santri sesuai PP No. 7 Tahun 2021','KOPONTREN','serba_usaha',1,'2026-02-04 09:20:25');
+INSERT INTO `koperasi_jenis` VALUES
+(1,'Koperasi Simpan Pinjam (KSP)','Koperasi yang bergerak di bidang simpan pinjam untuk anggota, menyediakan layanan tabungan, kredit, dan jasa keuangan lainnya sesuai PP No. 7 Tahun 2021','KSP','finansial',1,'2026-02-04 07:36:54'),
+(2,'Koperasi Konsumsi','Koperasi yang bergerak di bidang pemenuhan kebutuhan konsumsi anggota, menyediakan barang dan jasa kebutuhan sehari-hari sesuai PP No. 7 Tahun 2021','KK','konsumsi',1,'2026-02-04 07:36:54'),
+(3,'Koperasi Produksi','Koperasi yang bergerak di bidang produksi barang/jasa anggota, mengelola pengolahan, pemasaran, dan distribusi hasil produksi sesuai PP No. 7 Tahun 2021','KP','produksi',1,'2026-02-04 07:36:54'),
+(4,'Koperasi Pemasaran','Koperasi yang bergerak di bidang pemasaran hasil produksi anggota, menyediakan layanan distribusi, penjualan, dan ekspor sesuai PP No. 7 Tahun 2021','KPAS','produksi',1,'2026-02-04 07:36:54'),
+(5,'Koperasi Jasa','Koperasi yang bergerak di bidang penyediaan jasa untuk anggota, seperti transportasi, komunikasi, konsultasi, dan jasa lainnya sesuai PP No. 7 Tahun 2021','KJ','jasa',1,'2026-02-04 07:36:54'),
+(6,'Koperasi Serba Usaha (KSU)','Koperasi yang menjalankan berbagai jenis usaha kombinasi dari beberapa jenis koperasi dalam satu organisasi sesuai PP No. 7 Tahun 2021','KSU','serba_usaha',1,'2026-02-04 07:36:54'),
+(7,'Koperasi Karyawan','Koperasi yang bergerak di bidang kesejahteraan karyawan perusahaan, menyediakan simpan pinjam, konsumsi, dan jasa untuk karyawan sesuai PP No. 7 Tahun 2021','KKAR','karyawan',1,'2026-02-04 09:19:02'),
+(8,'Koperasi Pertanian','Koperasi yang bergerak di bidang pertanian, menyediakan sarana produksi, pengolahan hasil, dan pemasaran produk pertanian sesuai PP No. 7 Tahun 2021','KOPERTA','produksi',1,'2026-02-04 09:20:25'),
+(9,'Koperasi Nelayan','Koperasi yang bergerak di bidang perikanan, menyediakan alat tangkap, pengolahan hasil, dan pemasaran hasil perikanan sesuai PP No. 7 Tahun 2021','KOPERNAL','produksi',1,'2026-02-04 09:20:25'),
+(10,'Koperasi Peternakan','Koperasi yang bergerak di bidang peternakan, menyediakan pakan, pengolahan, dan pemasaran hasil peternakan sesuai PP No. 7 Tahun 2021','KOPERTAK','produksi',1,'2026-02-04 09:20:25'),
+(11,'Koperasi Perdagangan','Koperasi yang bergerak di bidang perdagangan grosir dan eceran, menyediakan barang dagangan untuk anggota sesuai PP No. 7 Tahun 2021','KOPERDAG','konsumsi',1,'2026-02-04 09:20:25'),
+(12,'Koperasi Pondok Pesantren','Koperasi yang bergerak di lingkungan pondok pesantren, menyediakan kebutuhan santri dan wali santri sesuai PP No. 7 Tahun 2021','KOPONTREN','serba_usaha',1,'2026-02-04 09:20:25');
 /*!40000 ALTER TABLE `koperasi_jenis` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -334,7 +416,8 @@ CREATE TABLE `koperasi_keuangan_pengaturan` (
 
 LOCK TABLES `koperasi_keuangan_pengaturan` WRITE;
 /*!40000 ALTER TABLE `koperasi_keuangan_pengaturan` DISABLE KEYS */;
-INSERT INTO `koperasi_keuangan_pengaturan` VALUES (4,4,2026,'2026-01-01','2026-12-31',100000.00,50000.00,12.00,2.00,'yearly','active','2026-02-04 17:30:29','2026-02-04 17:30:29',5);
+INSERT INTO `koperasi_keuangan_pengaturan` VALUES
+(4,4,2026,'2026-01-01','2026-12-31',100000.00,50000.00,12.00,2.00,'yearly','active','2026-02-04 17:30:29','2026-02-04 17:30:29',5);
 /*!40000 ALTER TABLE `koperasi_keuangan_pengaturan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -420,7 +503,7 @@ CREATE TABLE `koperasi_tenant` (
   KEY `idx_nik_koperasi` (`nik_koperasi`),
   KEY `idx_status_badan_hukum` (`status_badan_hukum`),
   KEY `idx_tanggal_status_terakhir` (`tanggal_status_terakhir`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -429,7 +512,8 @@ CREATE TABLE `koperasi_tenant` (
 
 LOCK TABLES `koperasi_tenant` WRITE;
 /*!40000 ALTER TABLE `koperasi_tenant` DISABLE KEYS */;
-INSERT INTO `koperasi_tenant` VALUES (4,'KSP POLRES SAMOSIR','\"KSP\"','terdaftar','belum_terdaftar',NULL,NULL,'2025-12-25','3171011001900001',NULL,NULL,NULL,0.00,'Jl. Danau Toba No. 03','081211223344',NULL,5,'2026-02-04 17:30:29','2026-02-04 17:30:29',3,40,590,10617);
+INSERT INTO `koperasi_tenant` VALUES
+(8,'KSP POLRES SAMOSIR','[\"1\"]',NULL,'belum_terdaftar',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0.00,'jl. Danau Toba no 03, PASAR PANGURURAN, PANGURURAN, KABUPATEN SAMOSIR, SUMATERA UTARA, 22392',NULL,NULL,NULL,'2026-02-08 11:52:06','2026-02-08 11:52:06',3,40,590,10617);
 /*!40000 ALTER TABLE `koperasi_tenant` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -540,6 +624,63 @@ LOCK TABLES `notifikasi` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `orang`
+--
+
+DROP TABLE IF EXISTS `orang`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `orang` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pengguna_id` int(11) NOT NULL,
+  `nama_lengkap` varchar(255) NOT NULL,
+  `nama_depan` varchar(100) DEFAULT NULL,
+  `nama_tengah` varchar(100) DEFAULT NULL,
+  `nama_belakang` varchar(100) DEFAULT NULL,
+  `hp` varchar(20) DEFAULT NULL,
+  `hp_alternatif` varchar(20) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `nik` varchar(20) DEFAULT NULL,
+  `kewarganegaraan` varchar(50) DEFAULT NULL,
+  `agama` varchar(50) DEFAULT NULL,
+  `jenis_kelamin` enum('L','P') DEFAULT NULL,
+  `tempat_lahir` varchar(100) DEFAULT NULL,
+  `tanggal_lahir` date DEFAULT NULL,
+  `alamat_lengkap` text DEFAULT NULL,
+  `province_id` int(11) DEFAULT NULL,
+  `regency_id` int(11) DEFAULT NULL,
+  `district_id` int(11) DEFAULT NULL,
+  `village_id` int(11) DEFAULT NULL,
+  `nama_jalan` varchar(255) DEFAULT NULL,
+  `nomor_rumah` varchar(10) DEFAULT NULL,
+  `rt` varchar(5) DEFAULT NULL,
+  `rw` varchar(5) DEFAULT NULL,
+  `postal_code` varchar(10) DEFAULT NULL,
+  `pekerjaan` varchar(100) DEFAULT NULL,
+  `instansi` varchar(255) DEFAULT NULL,
+  `jabatan` varchar(100) DEFAULT NULL,
+  `catatan` text DEFAULT NULL,
+  `dibuat_oleh` int(11) DEFAULT NULL,
+  `dibuat_pada` timestamp NULL DEFAULT current_timestamp(),
+  `diperbarui_pada` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `pengguna_id` (`pengguna_id`),
+  CONSTRAINT `orang_ibfk_1` FOREIGN KEY (`pengguna_id`) REFERENCES `pengguna` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orang`
+--
+
+LOCK TABLES `orang` WRITE;
+/*!40000 ALTER TABLE `orang` DISABLE KEYS */;
+INSERT INTO `orang` VALUES
+(5,10,'admin paling baik di dunia','admin','paling baik di','dunia','6281265511982',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'jl. Danau Toba no 03, PASAR PANGURURAN, PANGURURAN, KABUPATEN SAMOSIR, SUMATERA UTARA, 22392',3,40,590,10617,'jl. Danau Toba no','03',NULL,NULL,'22392','Administrator Koperasi','KSP POLRES SAMOSIR','Administrator','Dibuat otomatis saat registrasi koperasi',10,'2026-02-08 04:52:06','2026-02-08 11:52:06');
+/*!40000 ALTER TABLE `orang` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `pengawas`
 --
 
@@ -584,10 +725,11 @@ CREATE TABLE `pengguna` (
   `status` enum('active','inactive','pending') DEFAULT 'active',
   `dibuat_pada` timestamp NULL DEFAULT current_timestamp(),
   `diperbarui_pada` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `hp` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `idx_users_user_db_id` (`sumber_pengguna_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -596,7 +738,8 @@ CREATE TABLE `pengguna` (
 
 LOCK TABLES `pengguna` WRITE;
 /*!40000 ALTER TABLE `pengguna` DISABLE KEYS */;
-INSERT INTO `pengguna` VALUES (2,'testuser','$2y$10$dummyhash',1,'active','2026-02-04 17:26:43','2026-02-04 17:26:43'),(5,'820800','$2y$12$12ui9kSR2Sqh7mGRj2CHc.MyYEZBziRDuldj01y8aUMMJoWPfgUum',1,'active','2026-02-04 17:30:29','2026-02-04 17:30:29');
+INSERT INTO `pengguna` VALUES
+(10,'root','$2y$10$mr69A.e7sEpZN2CAvGPgYu2wUWSJZXgbgSx.f9pB/Bk4/PxrsjkRS',1,'active','2026-02-08 11:52:06','2026-02-08 11:52:06','6281265511982');
 /*!40000 ALTER TABLE `pengguna` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -624,7 +767,25 @@ CREATE TABLE `pengguna_izin_peran` (
 
 LOCK TABLES `pengguna_izin_peran` WRITE;
 /*!40000 ALTER TABLE `pengguna_izin_peran` DISABLE KEYS */;
-INSERT INTO `pengguna_izin_peran` VALUES (2,5,'2026-02-04 17:55:10'),(2,6,'2026-02-04 17:55:10'),(2,7,'2026-02-04 17:55:10'),(2,8,'2026-02-04 17:55:10'),(2,9,'2026-02-04 17:55:10'),(2,10,'2026-02-04 17:55:10'),(2,11,'2026-02-04 17:55:10'),(2,12,'2026-02-04 17:55:10'),(2,13,'2026-02-04 17:55:10'),(2,14,'2026-02-04 17:55:10'),(2,17,'2026-02-04 17:57:02');
+INSERT INTO `pengguna_izin_peran` VALUES
+(2,1,'2026-02-08 11:52:06'),
+(2,2,'2026-02-08 11:52:06'),
+(2,3,'2026-02-08 11:52:06'),
+(2,4,'2026-02-08 11:52:06'),
+(2,5,'2026-02-08 11:52:06'),
+(2,6,'2026-02-08 11:52:06'),
+(2,7,'2026-02-08 11:52:06'),
+(2,8,'2026-02-08 11:52:06'),
+(2,9,'2026-02-08 11:52:06'),
+(2,10,'2026-02-08 11:52:06'),
+(2,11,'2026-02-08 11:52:06'),
+(2,12,'2026-02-08 11:52:06'),
+(2,13,'2026-02-08 11:52:06'),
+(2,14,'2026-02-08 11:52:06'),
+(2,15,'2026-02-08 11:52:06'),
+(2,16,'2026-02-08 11:52:06'),
+(2,17,'2026-02-08 11:52:06'),
+(2,18,'2026-02-08 11:52:06');
 /*!40000 ALTER TABLE `pengguna_izin_peran` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -652,7 +813,8 @@ CREATE TABLE `pengguna_peran` (
 
 LOCK TABLES `pengguna_peran` WRITE;
 /*!40000 ALTER TABLE `pengguna_peran` DISABLE KEYS */;
-INSERT INTO `pengguna_peran` VALUES (5,1,'2026-02-04 20:01:25'),(5,2,'2026-02-04 17:30:29');
+INSERT INTO `pengguna_peran` VALUES
+(10,2,'2026-02-08 11:52:06');
 /*!40000 ALTER TABLE `pengguna_peran` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -743,7 +905,12 @@ CREATE TABLE `peran_jenis` (
 
 LOCK TABLES `peran_jenis` WRITE;
 /*!40000 ALTER TABLE `peran_jenis` DISABLE KEYS */;
-INSERT INTO `peran_jenis` VALUES (1,'super_admin','Super administrator with all access','2026-02-03 14:13:20'),(2,'admin','Administrator/Pengurus','2026-02-03 14:13:20'),(3,'pengawas','Pengawas with read/approve access','2026-02-03 14:13:20'),(4,'anggota','Regular member','2026-02-03 14:13:20'),(5,'calon_anggota','Prospective member','2026-02-03 14:13:20');
+INSERT INTO `peran_jenis` VALUES
+(1,'super_admin','Super administrator with all access','2026-02-03 14:13:20'),
+(2,'admin','Administrator/Pengurus','2026-02-03 14:13:20'),
+(3,'pengawas','Pengawas with read/approve access','2026-02-03 14:13:20'),
+(4,'anggota','Regular member','2026-02-03 14:13:20'),
+(5,'calon_anggota','Prospective member','2026-02-03 14:13:20');
 /*!40000 ALTER TABLE `peran_jenis` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1095,7 +1262,8 @@ CREATE TABLE `tenant_konfigurasi` (
 
 LOCK TABLES `tenant_konfigurasi` WRITE;
 /*!40000 ALTER TABLE `tenant_konfigurasi` DISABLE KEYS */;
-INSERT INTO `tenant_konfigurasi` VALUES (3,4,'[]','{\"multi_tenant\":true,\"modular\":true}','2026-02-04 17:30:29','2026-02-04 17:30:29');
+INSERT INTO `tenant_konfigurasi` VALUES
+(3,4,'[]','{\"multi_tenant\":true,\"modular\":true}','2026-02-04 17:30:29','2026-02-04 17:30:29');
 /*!40000 ALTER TABLE `tenant_konfigurasi` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1159,14 +1327,6 @@ LOCK TABLES `voting_suara` WRITE;
 /*!40000 ALTER TABLE `voting_suara` DISABLE KEYS */;
 /*!40000 ALTER TABLE `voting_suara` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping events for database 'koperasi_db'
---
-
---
--- Dumping routines for database 'koperasi_db'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -1177,4 +1337,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-06 23:51:12
+-- Dump completed on 2026-02-08 19:03:02

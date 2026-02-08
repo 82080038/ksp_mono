@@ -1,10 +1,10 @@
-<div class="sidebar">
+<div class="sidebar bg-primary mt-3 text-white" style="min-height: 100vh;">
     <div class="sidebar-header px-3 mb-3 d-flex align-items-center">
         <a href="/ksp_mono/" class="sidebar-brand d-flex align-items-center text-decoration-none">
             <div class="sidebar-brand-icon d-flex align-items-center justify-content-center me-2">
                 <i class="bi bi-bank"></i>
             </div>
-            <div class="sidebar-brand-text fw-bold">ksp_mono</div>
+            <div class="sidebar-brand-text fw-bold"><?php echo htmlspecialchars($_SESSION['cooperatives'][0]['nama_koperasi'] ?? 'Koperasi'); ?></div>
         </a>
         <button class="btn btn-link text-white d-lg-none ms-auto p-0 sidebar-toggle" aria-label="Toggle sidebar">
             <i class="bi bi-list fs-4"></i>
@@ -18,31 +18,36 @@
     <div class="sidebar-menu">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a href="/ksp_mono/" class="nav-link <?php echo (!isset($_GET['modul']) || $_GET['modul'] === 'dashboard') ? 'active' : ''; ?>">
+                <?php $isActive = (!isset($_GET['modul']) || $_GET['modul'] === 'dashboard'); ?>
+                <a href="/ksp_mono/" class="nav-link <?php echo $isActive ? 'bg-light text-primary' : 'text-white'; ?> <?php echo $isActive ? 'active' : ''; ?>">
                     <i class="bi bi-speedometer2 me-2"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="?modul=anggota" class="nav-link <?php echo (isset($_GET['modul']) && $_GET['modul'] === 'anggota') ? 'active' : ''; ?>">
+                <?php $isActive = (isset($_GET['modul']) && $_GET['modul'] === 'anggota'); ?>
+                <a href="?modul=anggota" class="nav-link <?php echo $isActive ? 'bg-light text-primary' : 'text-white'; ?> <?php echo $isActive ? 'active' : ''; ?>">
                     <i class="bi bi-people me-2"></i>
                     <span>Data Anggota</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="?modul=simpanan" class="nav-link <?php echo (isset($_GET['modul']) && $_GET['modul'] === 'simpanan') ? 'active' : ''; ?>">
+                <?php $isActive = (isset($_GET['modul']) && $_GET['modul'] === 'simpanan'); ?>
+                <a href="?modul=simpanan" class="nav-link <?php echo $isActive ? 'bg-light text-primary' : 'text-white'; ?> <?php echo $isActive ? 'active' : ''; ?>">
                     <i class="bi bi-wallet2 me-2"></i>
                     <span>Simpanan</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="?modul=pinjaman" class="nav-link <?php echo (isset($_GET['modul']) && $_GET['modul'] === 'pinjaman') ? 'active' : ''; ?>">
+                <?php $isActive = (isset($_GET['modul']) && $_GET['modul'] === 'pinjaman'); ?>
+                <a href="?modul=pinjaman" class="nav-link <?php echo $isActive ? 'bg-light text-primary' : 'text-white'; ?> <?php echo $isActive ? 'active' : ''; ?>">
                     <i class="bi bi-cash-coin me-2"></i>
                     <span>Pinjaman</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="?modul=laporan" class="nav-link <?php echo (isset($_GET['modul']) && $_GET['modul'] === 'laporan') ? 'active' : ''; ?>">
+                <?php $isActive = (isset($_GET['modul']) && $_GET['modul'] === 'laporan'); ?>
+                <a href="?modul=laporan" class="nav-link <?php echo $isActive ? 'bg-light text-primary' : 'text-white'; ?> <?php echo $isActive ? 'active' : ''; ?>">
                     <i class="bi bi-file-earmark-text me-2"></i>
                     <span>Laporan</span>
                 </a>
@@ -52,7 +57,8 @@
             <div class="sidebar-heading px-3 text-uppercase">Lainnya</div>
 
             <li class="nav-item">
-                <a href="?modul=pengaturan" class="nav-link <?php echo (isset($_GET['modul']) && $_GET['modul'] === 'pengaturan') ? 'active' : ''; ?>">
+                <?php $isActive = (isset($_GET['modul']) && $_GET['modul'] === 'pengaturan'); ?>
+                <a href="?modul=pengaturan" class="nav-link <?php echo $isActive ? 'bg-light text-primary' : 'text-white'; ?> <?php echo $isActive ? 'active' : ''; ?>">
                     <i class="bi bi-gear me-2"></i>
                     <span>Pengaturan</span>
                 </a>

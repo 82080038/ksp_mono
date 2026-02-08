@@ -24,17 +24,37 @@ try {
         $jumlah = (float)($_POST['jumlah'] ?? 0);
         $jenis = $_POST['jenis'] ?? 'setoran';
         $keterangan = trim($_POST['keterangan'] ?? '');
+        $tanggal = $_POST['tanggal'] ?? date('Y-m-d H:i:s');
         if ($anggota_id <= 0 || $jumlah <= 0 || !in_array($jenis, ['setoran', 'penarikan'], true)) {
             throw new Exception('anggota_id, jumlah, jenis wajib dan valid');
         }
         $stmt = $db->prepare('INSERT INTO simpanan_transaksi (anggota_id, jumlah, jenis, keterangan, dibuat_pada, diubah_pada) 
-                             VALUES (:aid, :jml, :jns, :ket, NOW(), NOW())');
+                             VALUES (:aid, :jml, :jns, :ket, :tanggal, :tanggal)');
         $stmt->execute([
             ':aid' => $anggota_id, 
             ':jml' => $jumlah, 
             ':jns' => $jenis, 
-            ':ket' => $keterangan
+            ':ket' => $keterangan,
+            ':tanggal' => $tanggal
         ]);
+        echo json_encode(['success' => true]);
+    } elseif ($action === 'get' && isset($_GET['id'])) {
+        $stmt = $db->prepare('SELECT * FROM simpanan_transaksi WHERE id = ?');
+        $stmt->execute([$_GET['id']]);
+        $data = $stmt->fetch();
+        echo json_encode(['success' => true, 'data' => $data]);
+    } elseif ($action === 'update' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $id = (int)($_POST['id'] ?? 0);
+        $anggota_id = (int)($_POST['anggota_id'] ?? 0);
+        $jumlah = (float)($_POST['jumlah'] ?? 0);
+        $jenis = $_POST['jenis'] ?? 'setoran';
+        $keterangan = trim($_POST['keterangan'] ?? '');
+        $tanggal = $_POST['tanggal'] ?? date('Y-m-d H:i:s');
+        if ($id <= 0 || $anggota_id <= 0 || $jumlah <= 0 || !in_array($jenis, ['setoran', 'penarikan'], true)) {
+            throw new Exception('Data tidak valid');
+        }
+        $stmt = $db->prepare('UPDATE simpanan_transaksi SET anggota_id = ?, jumlah = ?, jenis = ?, keterangan = ?, dibuat_pada = ? WHERE id = ?');
+        $stmt->execute([$anggota_id, $jumlah, $jenis, $keterangan, $tanggal, $id]);
         echo json_encode(['success' => true]);
     } elseif ($action === 'delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = (int)($_POST['id'] ?? 0);

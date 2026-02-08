@@ -1,10 +1,10 @@
 // Savings Form Validation
-$(document).ready(function() {
+waitForJqueryAndRun(function() {
     // Initialize form
     const $form = $('#savingsTransactionForm');
     
     // Load member options
-    $.getJSON('../api/anggota.php?action=list')
+    $.getJSON('/ksp_mono/api/anggota.php?action=list')
         .done(function(data) {
             if (data.success) {
                 const $select = $('#memberSelect');
@@ -45,7 +45,7 @@ function submitSavingsTransaction() {
     const formData = $('#savingsTransactionForm').serialize();
     
     $.ajax({
-        url: '../api/simpanan.php?action=create',
+        url: '/ksp_mono/api/simpanan.php?action=create',
         type: 'POST',
         data: formData,
         dataType: 'json',

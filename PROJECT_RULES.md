@@ -90,7 +90,7 @@ Aplikasi ini menggunakan dua database terpisah:
 - **Compliance**: Monitoring compliance terhadap regulasi koperasi dan AD/ART.
 
 ## Catatan Tambahan
-- Jika ada perubahan data alamat, lakukan di luar aplikasi (misalnya via phpMyAdmin atau script eksternal).
+- Jika ada perubahan data, gunakan file dump SQL: `sql/koperasi_db_dump.sql` atau script eksternal.
 - Helper Address menyediakan metode untuk fetch dan validasi data alamat secara PHP.
 - Sistem dirancang untuk mobile-first dan responsif di semua perangkat.
 - Backup data otomatis dan disaster recovery plan.

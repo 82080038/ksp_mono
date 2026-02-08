@@ -14,6 +14,50 @@ function format_uppercase($text) {
 }
 
 /**
+ * Format tanggal Indonesia untuk tampilan (contoh: 08 Feb 2026)
+ * @param string|null $date Date string Y-m-d atau datetime
+ * @param bool $with_time Sertakan jam:menit
+ * @return string
+ */
+function format_date($date, $with_time = false)
+{
+    if (empty($date)) return '';
+    $ts = strtotime($date);
+    if ($ts === false) return $date;
+    $format = $with_time ? 'd-m-Y H:i' : 'd-m-Y';
+    return date($format, $ts);
+}
+
+/**
+ * Normalisasi tanggal ke format input HTML (Y-m-d)
+ * @param string|null $date Date string
+ * @return string
+ */
+function format_date_input($date)
+{
+    if (empty($date)) return '';
+    $ts = strtotime($date);
+    if ($ts === false) return '';
+    return date('Y-m-d', $ts);
+}
+
+/**
+ * Format currency in Indonesian style
+ * @param float|int $amount Numeric amount
+ * @param string $prefix Currency prefix, default 'Rp '
+ * @return string Formatted money string, e.g., 'Rp 1.000.000'
+ */
+function format_money($amount, $prefix = 'Rp ')
+{
+    if ($amount === null || $amount === '') {
+        $amount = 0;
+    }
+    // Ensure numeric
+    $number = is_numeric($amount) ? (float)$amount : 0;
+    return $prefix . number_format($number, 0, ',', '.');
+}
+
+/**
  * Format Indonesian phone number with masking
  * @param string $phone Phone number
  * @param bool $with_mask Whether to return with mask
@@ -436,13 +480,16 @@ function has_permission($permission) {
     
     $db = Database::conn();
     
+    // Get user's roles
+    $userRoles = $db->query("SELECT peran_jenis_id FROM pengguna_peran WHERE pengguna_id = {$_SESSION['user_id']}")->fetchAll(PDO::FETCH_COLUMN);
+    if (empty($userRoles)) {
+        return false;
+    }
+    
     // Get all permissions for user's roles
-    $stmt = $db->prepare('SELECT p.permission_key 
-        FROM pengguna_peran pp
-        JOIN peran_izin pi ON pp.peran_jenis_id = pi.peran_jenis_id
-        JOIN permissions p ON pi.permission_id = p.id
-        WHERE pp.pengguna_id = ?');
-    $stmt->execute([$_SESSION['user_id']]);
+    $in = str_repeat('?,', count($userRoles) - 1) . '?';
+    $stmt = $db->prepare("SELECT im.name FROM pengguna_izin_peran piz JOIN izin_modul im ON piz.izin_modul_id = im.id WHERE piz.peran_jenis_id IN ($in)");
+    $stmt->execute($userRoles);
     
     $user_permissions = $stmt->fetchAll(PDO::FETCH_COLUMN);
     $_SESSION['permissions'] = $user_permissions; // Cache in session
@@ -451,21 +498,27 @@ function has_permission($permission) {
 }
 
 /**
- * Device Detection Helper Function
+ * Format name to title case (first letter of each word uppercase)
+ * @param string $name Name to format
+ * @return string Formatted name
  */
+function format_name_title_case($name) {
+    return ucwords(strtolower(trim($name)));
+}
 
 /**
- * Get device type (mobile, tablet, or desktop)
- * @return string Device type
+ * Truncate text with ellipsis if too long
+ * @param string $text Text to truncate
+ * @param int $max_length Maximum length before truncation
+ * @param string $suffix Suffix to add (default '...')
+ * @return string Truncated text
  */
-function get_device_type() {
-    $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-    
-    if (preg_match('/(Mobile|Android|iPhone|iPod|iPad|BlackBerry)/i', $userAgent)) {
-        return (preg_match('/(Tablet|iPad)/i', $userAgent)) ? 'tablet' : 'mobile';
+function truncate_text($text, $max_length = 20, $suffix = '...') {
+    $text = trim($text);
+    if (strlen($text) <= $max_length) {
+        return $text;
     }
-    
-    return 'desktop';
+    return substr($text, 0, $max_length - strlen($suffix)) . $suffix;
 }
 
 ?>

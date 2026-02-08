@@ -69,4 +69,17 @@ class Auth
         }
         session_destroy();
     }
+
+    public function getUserRoles(string $username): array
+    {
+        $stmt = $this->db->prepare('
+            SELECT r.name
+            FROM peran_jenis r
+            JOIN pengguna_peran up ON r.id = up.peran_jenis_id
+            JOIN pengguna u ON up.pengguna_id = u.id
+            WHERE u.username = :u
+        ');
+        $stmt->execute([':u' => $username]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
 }

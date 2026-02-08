@@ -155,37 +155,11 @@ $(document).ready(function() {
         $(form).addClass('was-validated');
     });
     
-    // Handle login errors
+    // Handle login errors from URL parameter
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('error')) {
         $('#loginError').text(decodeURIComponent(urlParams.get('error'))).removeClass('d-none');
     }
-});
-</script>
-
-<script>
-$(document).ready(function() {
-    // Handle login response
-    $('#loginForm').on('ajax:success', function(e, data) {
-        if (data.role_choice_needed) {
-            // Show role selection modal
-            $('#roleSelectionModal').modal('show');
-            
-            // Handle role selection
-            $('.btn-role').on('click', function() {
-                const selectedRole = $(this).data('role');
-                $.post('/ksp_mono/login_action.php', {
-                    action: 'set_role',
-                    role: selectedRole
-                }, function(response) {
-                    window.location.href = response.redirect || '/dashboard.php';
-                });
-            });
-        } else {
-            // Normal redirect
-            window.location.href = data.redirect || '/dashboard.php';
-        }
-    });
 });
 </script>
 </body>

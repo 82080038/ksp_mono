@@ -527,78 +527,6 @@
 
 ---
 
-### L. MODUL SPESIAL: PROGRAM MAKAN BERGIZI GRATIS (MBG)
-
-> **CATATAN OPERASIONAL:**
-> Untuk detail prosedur operasional standar (SOP), job description, dan template dokumen fisik, silakan merujuk pada dokumen terpisah: **[MANUAL_OPERASIONAL_DAN_SOP.md](MANUAL_OPERASIONAL_DAN_SOP.md)**.
-> Dokumen tersebut mencakup aspek kepatuhan terhadap regulasi (UU Koperasi, Permenkes Hygiene Sanitasi) dan integrasi alur kerja manual dengan sistem aplikasi ini.
-
-#### L1. Modul Dapur & Operasional
-- **Fitur:**
-  - **Manajemen Stok Dapur:**
-    - Pencatatan stok bahan makanan masuk dari koperasi (Integrasi dengan Modul Inventaris)
-    - Monitoring penggunaan bahan baku harian (FIFO/FEFO)
-    - Notifikasi stok kritis otomatis
-    - Rekonsiliasi stok antara data sistem dan fisik (Stock Opname)
-  - **Manajemen Produksi:**
-    - Pengelolaan menu harian/mingguan (Siklus Menu)
-    - Estimasi kebutuhan bahan baku berdasarkan menu dan jumlah porsi
-    - Pelacakan waktu persiapan (Preparation Time) dan produksi (Cooking Time)
-    - Log aktivitas dapur (Shift pagi/siang/sore)
-  - **Audit Trail:**
-    - Pencatatan seluruh transaksi keluar-masuk bahan makanan
-    - Pelacakan batch produksi untuk traceability
-
-#### L2. Modul Gizi & Menu
-- **Fitur:**
-  - **Analisis Nilai Gizi:**
-    - Perhitungan nilai gizi per menu (Kalori, Protein, Lemak, Karbohidrat, Vitamin)
-    - Database komposisi bahan makanan (DKBM)
-  - **Perencanaan Diet:**
-    - Penyesuaian menu berdasarkan kebutuhan diet khusus (Alergi, Diabetes, Rendah Garam, dll)
-    - Analisis kecukupan gizi untuk populasi target (AKG)
-  - **Pelaporan Gizi:**
-    - Laporan asupan gizi harian/mingguan
-    - Grafik tren pemenuhan gizi
-    - Rekomendasi perbaikan menu
-
-#### L3. Modul Distribusi Makanan
-- **Fitur:**
-  - **Penjadwalan & Tracking:**
-    - Sistem penjadwalan distribusi ke unit/sekolah/penerima
-    - Pelacakan jumlah paket makanan yang didistribusikan (Real-time)
-    - Monitoring waktu keberangkatan dan kedatangan
-  - **Verifikasi Penerimaan:**
-    - Bukti terima digital (Foto & Tanda Tangan)
-    - Verifikasi kondisi makanan saat diterima (Suhu, Kemasan, Kelayakan)
-    - Input feedback langsung dari penerima
-  - **Armada:**
-    - Manajemen driver dan kendaraan distribusi
-
-#### L4. Integrasi Sistem Inventaris Koperasi
-- **Fitur:**
-  - **Otomatisasi Pemesanan:**
-    - Generate Purchase Request (PR) otomatis dari Dapur ke Koperasi saat stok minimum
-    - Approval workflow untuk pengadaan bahan
-  - **Traceability:**
-    - Pelacakan asal bahan makanan dari supplier koperasi hingga ke piring penerima
-  - **Laporan Terintegrasi:**
-    - Laporan penggunaan bahan makanan periodik
-    - Analisis efisiensi biaya per porsi (Food Costing)
-    - Laporan sisa makanan (Food Waste)
-
-#### L5. Pelaporan & Monitoring
-- **Fitur:**
-  - **Laporan Operasional:**
-    - Laporan harian/mingguan/bulanan (Produksi, Distribusi, Stok)
-    - Dashboard monitoring real-time untuk manajer
-  - **Notifikasi System:**
-    - Alert stok kritis
-    - Alert keterlambatan distribusi
-    - Alert penyimpangan standar gizi
-
----
-
 ## ARSITEKTUR TEKNIS
 
 ### Frontend
@@ -667,23 +595,23 @@
 
 #### Struktur Tabel Utama:
 - **Manajemen User & Role:**
-  - `pengguna` - Data pengguna (anggota, pengurus, pengawas)
-  - `peran_jenis` - Peran pengguna
-  - `pengguna_peran` - Multiple roles per user
-  - `izin_modul` - Permission sistem
+  - `users` - Data pengguna (anggota, pengurus, pengawas)
+  - `roles` - Peran pengguna
+  - `user_roles` - Multiple roles per user
+  - `permissions` - Permission sistem
 - **Koperasi Core:**
   - `anggota` - Data anggota lengkap
   - `pengurus` - Data pengurus
   - `pengawas` - Data pengawas
-  - `simpanan_jenis` - Jenis simpanan
-  - `simpanan_transaksi` - Transaksi simpanan
+  - `simpanan_types` - Jenis simpanan
+  - `simpanan_transactions` - Transaksi simpanan
   - `pinjaman` - Data pinjaman
   - `pinjaman_angsuran` - Jadwal & pembayaran angsuran
 - **E-Commerce:**
   - `produk` - Katalog produk/jasa
   - `product_categories` - Kategori produk
-  - `pesanan` - Pesanan
-  - `pesanan_detail` - Detail pesanan
+  - `orders` - Pesanan
+  - `order_details` - Detail pesanan
   - `cart` - Keranjang belanja
 - **Pemasok & Mitra:**
   - `suppliers` - Data pemasok
@@ -702,9 +630,9 @@
   - `agent_sales` - Penjualan oleh agen
   - `agent_commissions` - Komisi agen
 - **Keuangan & Akuntansi:**
-  - `akuntansi_jenis` - Chart of Accounts
-  - `jurnal` - Jurnal umum
-  - `buku_besar` - Buku besar
+  - `chart_of_accounts` - Chart of Accounts
+  - `journal_entries` - Jurnal umum
+  - `general_ledger` - Buku besar
   - `fixed_assets` - Aset tetap
   - `asset_depreciations` - Depresiasi aset
 - **Operasional:**
@@ -714,7 +642,7 @@
   - `operational_costs` - Biaya operasional
 - **Laporan & Log:**
   - `reports` - Laporan
-  - `log_audit` - Audit trail
+  - `audit_logs` - Audit trail
   - `system_logs` - System logs
 - **Konfigurasi:**
   - `config` - Konfigurasi sistem
@@ -940,11 +868,11 @@ AIPDA PATRI SIHALOHO, SH
 
 #### A. Tabel Manajemen User & Role
 ```sql
-- pengguna (id, nama, email, password, role_utama, is_investor, is_agen, is_pembeli, status, created_at, updated_at)
-- peran_jenis (id, nama_role, deskripsi, permissions)
-- pengguna_peran (user_id, role_id, status, created_at)
-- izin_modul (id, nama_permission, deskripsi)
-- pengguna_izin_peran (role_id, permission_id)
+- users (id, nama, email, password, role_utama, is_investor, is_agen, is_pembeli, status, created_at, updated_at)
+- roles (id, nama_role, deskripsi, permissions)
+- user_roles (user_id, role_id, status, created_at)
+- permissions (id, nama_permission, deskripsi)
+- role_permissions (role_id, permission_id)
 ```
 
 #### B. Tabel Koperasi Core
@@ -952,8 +880,8 @@ AIPDA PATRI SIHALOHO, SH
 - anggota (id, user_id, nik, alamat, telepon, foto, status_keanggotaan, created_at, updated_at)
 - pengurus (id, user_id, jabatan, periode_mulai, periode_akhir, status, created_at)
 - pengawas (id, user_id, jabatan, periode_mulai, periode_akhir, status, created_at)
-- simpanan_jenis (id, nama_simpanan, jenis, deskripsi, created_at)
-- simpanan_transaksi (id, anggota_id, simpanan_type_id, jumlah, tanggal, jenis_transaksi, created_at)
+- simpanan_types (id, nama_simpanan, jenis, deskripsi, created_at)
+- simpanan_transactions (id, anggota_id, simpanan_type_id, jumlah, tanggal, jenis_transaksi, created_at)
 - pinjaman (id, anggota_id, jumlah_pinjaman, bunga, jangka_waktu, tanggal_pengajuan, status, approved_by, created_at)
 - pinjaman_angsuran (id, pinjaman_id, angsuran_ke, jumlah_angsuran, tanggal_jatuh_tempo, tanggal_bayar, status, created_at)
 ```
@@ -962,8 +890,8 @@ AIPDA PATRI SIHALOHO, SH
 ```sql
 - produk (id, kode_produk, nama_produk, kategori_id, harga, stok, foto, deskripsi, status, created_at, updated_at)
 - product_categories (id, nama_kategori, deskripsi, created_at)
-- pesanan (id, nomor_order, customer_id, customer_type, tanggal_order, total_harga, total_biaya_operasional, total_bayar, metode_pengambilan, lokasi_pengambilan_id, alamat_pengiriman, metode_pembayaran, status_pembayaran, status_order, created_at, updated_at)
-- pesanan_detail (id, order_id, produk_id, qty, harga_satuan, diskon, subtotal, created_at)
+- orders (id, nomor_order, customer_id, customer_type, tanggal_order, total_harga, total_biaya_operasional, total_bayar, metode_pengambilan, lokasi_pengambilan_id, alamat_pengiriman, metode_pembayaran, status_pembayaran, status_order, created_at, updated_at)
+- order_details (id, order_id, produk_id, qty, harga_satuan, diskon, subtotal, created_at)
 - cart (id, user_id, produk_id, qty, created_at, updated_at)
 ```
 
@@ -997,10 +925,10 @@ AIPDA PATRI SIHALOHO, SH
 
 #### G. Tabel Keuangan & Akuntansi
 ```sql
-- akuntansi_jenis (id, kode_akun, nama_akun, kategori, parent_id, saldo_awal, created_at, updated_at)
-- jurnal (id, tanggal, nomor_jurnal, deskripsi, created_by, created_at, updated_at)
-- jurnal_detail (id, journal_entry_id, account_id, debit, kredit, created_at)
-- buku_besar (id, account_id, tanggal, debit, kredit, saldo, reference_type, reference_id, created_at)
+- chart_of_accounts (id, kode_akun, nama_akun, kategori, parent_id, saldo_awal, created_at, updated_at)
+- journal_entries (id, tanggal, nomor_jurnal, deskripsi, created_by, created_at, updated_at)
+- journal_entry_details (id, journal_entry_id, account_id, debit, kredit, created_at)
+- general_ledger (id, account_id, tanggal, debit, kredit, saldo, reference_type, reference_id, created_at)
 - fixed_assets (id, kode_aset, nama_aset, kategori, nilai_perolehan, tanggal_perolehan, metode_depresiasi, umur_ekonomis, nilai_buku, status, created_at, updated_at)
 - asset_depreciations (id, asset_id, periode, nilai_depresiasi, nilai_buku_setelah, created_at)
 ```
@@ -1017,7 +945,7 @@ AIPDA PATRI SIHALOHO, SH
 #### I. Tabel Laporan & Log
 ```sql
 - reports (id, jenis_laporan, periode, data_json, file_path, created_by, created_at)
-- log_audit (id, user_id, action, table_name, record_id, old_values, new_values, ip_address, user_agent, created_at)
+- audit_logs (id, user_id, action, table_name, record_id, old_values, new_values, ip_address, user_agent, created_at)
 - system_logs (id, level, message, context, created_at)
 ```
 
@@ -1026,20 +954,6 @@ AIPDA PATRI SIHALOHO, SH
 - config (id, key, value, description, updated_at)
 - email_templates (id, nama_template, subject, body, created_at, updated_at)
 - notifications (id, user_id, tipe, pesan, status_baca, created_at)
-```
-
-#### K. Tabel MBG (Makan Bergizi Gratis)
-```sql
-- mbg_locations (id, nama_lokasi, tipe, alamat, kapasitas_produksi, penanggung_jawab_id, created_at)
-- mbg_recipients (id, nama_penerima, tipe_instansi, alamat, jumlah_target, kontak_person, lokasi_id_supply, created_at)
-- mbg_ingredients (id, nama_bahan, satuan, kategori, masa_simpan_hari, standar_gizi, created_at)
-- mbg_menus (id, nama_menu, siklus_hari, total_kalori, deskripsi, status, created_at)
-- mbg_menu_ingredients (id, menu_id, ingredient_id, qty_per_porsi, created_at)
-- mbg_inventory (id, location_id, ingredient_id, qty_stok, min_stok, created_at, updated_at)
-- mbg_batches (id, ingredient_id, inventory_id, batch_number, qty, tgl_produksi, tgl_kadaluwarsa, supplier_id, status_qc, created_at)
-- mbg_production_plans (id, location_id, tgl_produksi, menu_id, target_porsi, status, created_at)
-- mbg_qc_logs (id, production_id, stage, parameter, hasil_cek, petugas_qc_id, foto_bukti, waktu_cek, status, created_at)
-- mbg_distributions (id, production_id, recipient_id, driver_id, vehicle_no, waktu_berangkat, waktu_sampai, qty_kirim, qty_terima, foto_bukti_terima, penerima_nama, status, created_at)
 ```
 
 ---

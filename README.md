@@ -36,20 +36,19 @@ Aplikasi manajemen koperasi modern dengan fitur lengkap untuk mengelola simpanan
    DB_NAME_ADDRESS=alamat_db
    ```
 
-4. Buat database (CLI import, tanpa phpMyAdmin):
+4. Buat database (CLI import dengan file dump SQL):
    - Import schema + data alamat (read-only):
      ```bash
      mysql -u root -p alamat_db < sql/alamat_db_max_date_schema.sql
      mysql -u root -p alamat_db < sql/alamat_db_with_data.sql
      ```
+   - Import database Koperasi lengkap dengan data:
+     ```bash
+     mysql -u root -p koperasi_db < sql/koperasi_db_dump.sql
+     ```
    - Import database People (jika dibutuhkan):
      ```bash
      mysql -u root -p people_db < sql/people_db.sql
-     ```
-   - Import database Koperasi (coop_db/koperasi_db, sesuaikan nama di config.php/.env):
-     ```bash
-     mysql -u root -p koperasi_db < sql/koperasi_db.sql
-     mysql -u root -p koperasi_db < sql/koperasi_db_with_data.sql
      ```
    - Pastikan kredensial `config/config.php` atau `.env` sesuai (host/user/pass/nama DB)
 

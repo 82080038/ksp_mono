@@ -3,6 +3,33 @@ require_once __DIR__ . '/../../../app/bootstrap.php';
 require_once __DIR__ . '/../../../app/helpers.php';
 require_once __DIR__ . '/../../../app/ResponsiveDataService.php';
 
+// Fallback function definitions in case helpers.php is not loaded
+if (!function_exists('get_device_type')) {
+    function get_device_type() {
+        $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+        if (preg_match('/(Mobile|Android|iPhone|iPod|iPad|BlackBerry)/i', $userAgent)) {
+            return (preg_match('/(Tablet|iPad)/i', $userAgent)) ? 'tablet' : 'mobile';
+        }
+        return 'desktop';
+    }
+}
+
+if (!function_exists('format_name_title_case')) {
+    function format_name_title_case($name) {
+        return ucwords(strtolower(trim($name)));
+    }
+}
+
+if (!function_exists('truncate_text')) {
+    function truncate_text($text, $max_length = 20, $suffix = '...') {
+        $text = trim($text);
+        if (strlen($text) <= $max_length) {
+            return $text;
+        }
+        return substr($text, 0, $max_length - strlen($suffix)) . $suffix;
+    }
+}
+
 // Use Auth class for authentication
 $auth = new Auth();
 if (!$auth->check()) {
@@ -31,75 +58,86 @@ $deviceType = get_device_type();
 $limits = $itemLimits[$deviceType];
 
 // Load data with device-specific limits
-$transactions = ResponsiveDataService::getData('transactions', [
-    'order' => 'date DESC'
+$transactions = ResponsiveDataService::getData('log_audit', [
+    'order' => 'created_at DESC'
 ]);
 
-$notifications = ResponsiveDataService::getData('notifications', [
-    'order' => 'created_at DESC',
-    'where' => "user_id = {$_SESSION['user_id']}"
-]);
+// Get dashboard metrics (match schema: simpanan_transaksi uses nilai & transaction_type)
+$db = Database::conn();
+$metrics = [
+    'total_members' => $db->query("SELECT COUNT(*) AS count FROM anggota")->fetch()['count'] ?? 0,
+    // Total setoran (deposit) dikurangi penarikan untuk saldo agregat
+    'total_savings' => $db->query("SELECT COALESCE(SUM(CASE WHEN transaction_type = 'deposit' THEN nilai WHEN transaction_type = 'withdraw' THEN -nilai ELSE 0 END),0) AS total FROM simpanan_transaksi")->fetch()['total'] ?? 0,
+    'total_loans' => $db->query("SELECT COALESCE(SUM(amount),0) AS total FROM pinjaman WHERE status = 'active'")->fetch()['total'] ?? 0,
+    // Jika SHU dicatat sebagai transaksi simpanan dengan type_id khusus, sesuaikan query ini; default 0
+    'total_shu' => 0
+];
 ?>
 
 <div class="container py-4">
+    <!-- Dashboard Metrics -->
+    <div class="row g-3 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="bg-primary bg-opacity-10 rounded-3 p-3 d-inline-flex mb-3">
+                        <i class="bi bi-people fs-1 text-primary"></i>
+                    </div>
+                    <h3 class="h4 mb-1"><?php echo number_format($metrics['total_members']); ?></h3>
+                    <p class="text-muted small mb-0">Total Anggota</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="bg-success bg-opacity-10 rounded-3 p-3 d-inline-flex mb-3">
+                        <i class="bi bi-cash-coin fs-1 text-success"></i>
+                    </div>
+                    <h3 class="h4 mb-1">Rp <?php echo number_format($metrics['total_savings'], 0, ',', '.'); ?></h3>
+                    <p class="text-muted small mb-0">Total Simpanan</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="bg-warning bg-opacity-10 rounded-3 p-3 d-inline-flex mb-3">
+                        <i class="bi bi-credit-card fs-1 text-warning"></i>
+                    </div>
+                    <h3 class="h4 mb-1">Rp <?php echo number_format($metrics['total_loans'], 0, ',', '.'); ?></h3>
+                    <p class="text-muted small mb-0">Total Pinjaman</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="bg-info bg-opacity-10 rounded-3 p-3 d-inline-flex mb-3">
+                        <i class="bi bi-trophy fs-1 text-info"></i>
+                    </div>
+                    <h3 class="h4 mb-1">Rp <?php echo number_format($metrics['total_shu'], 0, ',', '.'); ?></h3>
+                    <p class="text-muted small mb-0">Total SHU</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row g-3">
-        <!-- Panel Profil Pengguna -->
+        <!-- Sidebar -->
         <div class="col-lg-3 col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body d-flex flex-column">
-                    <!-- Header Profil dengan Ikon -->
-                    <div class="text-center mb-4">
-                        <div class="position-relative d-inline-block mb-3">
-                            <div class="bg-primary bg-opacity-10 rounded-circle p-3">
-                                <i class="bi bi-person-circle fs-1 text-primary"></i>
-                            </div>
-                            <span class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-1">
-                                <i class="bi bi-check-lg"></i>
-                            </span>
-                        </div>
-                        <h4 class="h5 mb-1">ksp_mono</h4>
-                        <p class="text-muted small">Sistem Informasi Koperasi</p>
-                    </div>
-                    
-                    <!-- Informasi Pengguna -->
-                    <div class="mb-4">
-                        <div class="d-flex align-items-center mb-2">
-                            <div class="bg-light rounded p-2 me-2">
-                                <i class="bi bi-person-fill text-primary"></i>
-                            </div>
-                            <div>
-                                <small class="text-muted d-block">Nama Pengguna</small>
-                                <div class="fw-medium"><?php echo isset($user['username']) ? htmlspecialchars($user['username']) : 'Guest'; ?></div>
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex align-items-center mb-2">
-                            <div class="bg-light rounded p-2 me-2">
-                                <i class="bi bi-shield-lock-fill text-primary"></i>
-                            </div>
-                            <div>
-                                <small class="text-muted d-block">Hak Akses</small>
-                                <div class="fw-medium"><?php echo isset($user['role']) ? ucfirst(htmlspecialchars($user['role'])) : 'Tamu'; ?></div>
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex align-items-center">
-                            <div class="bg-light rounded p-2 me-2">
-                                <i class="bi bi-clock-history text-primary"></i>
-                            </div>
-                            <div>
-                                <small class="text-muted d-block">Terakhir Login</small>
-                                <div class="fw-medium"><?php echo date('d M Y, H:i'); ?></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Tombol Aksi -->
-                    <div class="mt-auto">
-                        <a href="/ksp_mono/public/logout.php" class="btn btn-outline-danger w-100">
-                            <i class="bi bi-box-arrow-right me-2"></i>Keluar
-                        </a>
-                    </div>
+            <div class="sidebar bg-light p-3 rounded shadow-sm">
+                <h5 class="sidebar-title mb-3">Menu Cepat</h5>
+                <div class="d-grid gap-2">
+                    <?php if (isset($_SESSION['accessible_modules']) && is_array($_SESSION['accessible_modules'])): ?>
+                    <?php foreach ($_SESSION['accessible_modules'] as $module): ?>
+                    <?php if ($module['nama'] !== 'dashboard'): ?>
+                    <a href="?modul=<?php echo $module['nama']; ?>" class="btn btn-outline-primary btn-sm">
+                        <i class="bi <?php echo $module['ikon']; ?> me-2"></i><?php echo $module['nama_tampil']; ?>
+                    </a>
+                    <?php endif; ?>
+                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -127,16 +165,18 @@ $notifications = ResponsiveDataService::getData('notifications', [
                     </div>
 
                     <div class="row g-3">
-                        <!-- Kartu Anggota -->
+                        <?php if (isset($_SESSION['accessible_modules']) && is_array($_SESSION['accessible_modules'])): ?>
+                        <?php foreach ($_SESSION['accessible_modules'] as $module): ?>
+                        <?php if ($module['nama'] !== 'dashboard'): ?>
                         <div class="col-xl-4 col-md-6">
-                            <a href="?modul=anggota" class="text-decoration-none text-dark">
+                            <a href="?modul=<?php echo $module['nama']; ?>" class="text-decoration-none text-dark">
                                 <div class="card h-100 border-0 shadow-sm hover-lift">
                                     <div class="card-body p-4 text-center">
                                         <div class="bg-primary bg-opacity-10 rounded-3 p-3 d-inline-flex mb-3">
-                                            <i class="bi bi-people-fill fs-1 text-primary"></i>
+                                            <i class="bi <?php echo $module['ikon']; ?> fs-1 text-primary"></i>
                                         </div>
-                                        <h5 class="h6 mb-1">Data Anggota</h5>
-                                        <p class="text-muted small mb-0">Kelola data anggota koperasi</p>
+                                        <h5 class="h6 mb-1"><?php echo $module['nama_tampil']; ?></h5>
+                                        <p class="text-muted small mb-0">Kelola <?php echo strtolower($module['nama_tampil']); ?></p>
                                     </div>
                                     <div class="card-footer bg-transparent border-top-0 pt-0 text-center">
                                         <span class="badge bg-primary bg-opacity-10 text-primary">
@@ -146,90 +186,13 @@ $notifications = ResponsiveDataService::getData('notifications', [
                                 </div>
                             </a>
                         </div>
-
-                        <!-- Kartu Simpanan -->
-                        <div class="col-xl-4 col-md-6">
-                            <a href="?modul=simpanan" class="text-decoration-none text-dark">
-                                <div class="card h-100 border-0 shadow-sm hover-lift">
-                                    <div class="card-body p-4 text-center">
-                                        <div class="bg-success bg-opacity-10 rounded-3 p-3 d-inline-flex mb-3">
-                                            <i class="bi bi-wallet2 fs-1 text-success"></i>
-                                        </div>
-                                        <h5 class="h6 mb-1">Simpanan</h5>
-                                        <p class="text-muted small mb-0">Kelola simpanan anggota koperasi</p>
-                                    </div>
-                                    <div class="card-footer bg-transparent border-top-0 pt-0 text-center">
-                                        <span class="badge bg-success bg-opacity-10 text-success">
-                                            <i class="bi bi-arrow-right-short"></i> Masuk
-                                        </span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-
-                        <!-- Kartu Pinjaman -->
-                        <div class="col-xl-4 col-md-6">
-                            <a href="?modul=pinjaman" class="text-decoration-none text-dark">
-                                <div class="card h-100 border-0 shadow-sm hover-lift">
-                                    <div class="card-body p-4 text-center">
-                                        <div class="bg-warning bg-opacity-10 rounded-3 p-3 d-inline-flex mb-3">
-                                            <i class="bi bi-cash-coin fs-1 text-warning"></i>
-                                        </div>
-                                        <h5 class="h6 mb-1">Pinjaman</h5>
-                                        <p class="text-muted small mb-0">Kelola pinjaman anggota</p>
-                                    </div>
-                                    <div class="card-footer bg-transparent border-top-0 pt-0 text-center">
-                                        <span class="badge bg-warning bg-opacity-10 text-warning">
-                                            <i class="bi bi-arrow-right-short"></i> Masuk
-                                        </span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-
-                        <!-- Kartu Laporan -->
-                        <div class="col-xl-4 col-md-6">
-                            <a href="?modul=laporan" class="text-decoration-none text-dark">
-                                <div class="card h-100 border-0 shadow-sm hover-lift">
-                                    <div class="card-body p-4 text-center">
-                                        <div class="bg-info bg-opacity-10 rounded-3 p-3 d-inline-flex mb-3">
-                                            <i class="bi bi-file-earmark-bar-graph fs-1 text-info"></i>
-                                        </div>
-                                        <h5 class="h6 mb-1">Laporan</h5>
-                                        <p class="text-muted small mb-0">Lihat laporan keuangan</p>
-                                    </div>
-                                    <div class="card-footer bg-transparent border-top-0 pt-0 text-center">
-                                        <span class="badge bg-info bg-opacity-10 text-info">
-                                            <i class="bi bi-arrow-right-short"></i> Masuk
-                                        </span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-
-                        <!-- Kartu Pengaturan -->
-                        <div class="col-xl-4 col-md-6">
-                            <a href="?modul=pengaturan" class="text-decoration-none text-dark">
-                                <div class="card h-100 border-0 shadow-sm hover-lift">
-                                    <div class="card-body p-4 text-center">
-                                        <div class="bg-secondary bg-opacity-10 rounded-3 p-3 d-inline-flex mb-3">
-                                            <i class="bi bi-gear fs-1 text-secondary"></i>
-                                        </div>
-                                        <h5 class="h6 mb-1">Pengaturan</h5>
-                                        <p class="text-muted small mb-0">Pengaturan sistem</p>
-                                    </div>
-                                    <div class="card-footer bg-transparent border-top-0 pt-0 text-center">
-                                        <span class="badge bg-secondary bg-opacity-10 text-secondary">
-                                            <i class="bi bi-arrow-right-short"></i> Masuk
-                                        </span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
+                        <?php endif; ?>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
 
                         <!-- Kartu Bantuan -->
                         <div class="col-xl-4 col-md-6">
-                            <a href="#" class="text-decoration-none text-dark" data-bs-toggle="modal" data-bs-target="#bantuanModal">
+                            <a href="#" class="text-decoration-none text-dark">
                                 <div class="card h-100 border-0 shadow-sm hover-lift">
                                     <div class="card-body p-4 text-center">
                                         <div class="bg-purple bg-opacity-10 rounded-3 p-3 d-inline-flex mb-3">
@@ -240,7 +203,7 @@ $notifications = ResponsiveDataService::getData('notifications', [
                                     </div>
                                     <div class="card-footer bg-transparent border-top-0 pt-0 text-center">
                                         <span class="badge bg-purple bg-opacity-10 text-purple">
-                                            <i class="bi bi-arrow-right-short"></i> Buka
+                                            <i class="bi bi-arrow-right-short"></i> Segera
                                         </span>
                                     </div>
                                 </div>
@@ -270,10 +233,10 @@ $notifications = ResponsiveDataService::getData('notifications', [
                             <tbody id="transactions-table-body">
                                 <?php foreach ($transactions as $transaction) { ?>
                                 <tr>
-                                    <td class="text-nowrap"><?php echo $transaction['date']; ?></td>
-                                    <td><?php echo $transaction['activity']; ?></td>
-                                    <td><?php echo $transaction['description']; ?></td>
-                                    <td class="text-nowrap"><?php echo $transaction['user']; ?></td>
+                                    <td class="text-nowrap"><?php echo format_date($transaction['created_at']); ?></td>
+                                    <td><?php echo $transaction['action']; ?></td>
+                                    <td><?php echo $transaction['table_name'] . ' ID: ' . $transaction['record_id']; ?></td>
+                                    <td class="text-nowrap"><?php echo $transaction['user_id']; ?></td>
                                 </tr>
                                 <?php } ?>
                             </tbody>
@@ -288,6 +251,17 @@ $notifications = ResponsiveDataService::getData('notifications', [
 <script>
     let loading = false;
     let offset = <?php echo $limits['transactions']; ?>;
+
+    function get_device_type() {
+        const width = window.innerWidth;
+        if (width < 768) return 'mobile';
+        if (width < 1024) return 'tablet';
+        return 'desktop';
+    }
+
+    function highlightActiveNav() {
+        // Function to highlight active navigation - already handled in PHP
+    }
 
     async function loadMoreTransactions() {
         if (loading) return;

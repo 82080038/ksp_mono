@@ -7,11 +7,11 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="startDate" class="form-label"><i class="bi bi-calendar"></i> Tanggal Mulai</label>
-                    <input type="date" class="form-control" name="start_date" id="startDate" required>
+                    <input type="text" class="form-control date-picker" id="startDate" name="start_date" placeholder="dd-mm-yyyy" value="<?php echo format_date_input($_GET['start_date'] ?? ''); ?>" required>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="endDate" class="form-label"><i class="bi bi-calendar-check"></i> Tanggal Selesai</label>
-                    <input type="date" class="form-control" name="end_date" id="endDate" required>
+                    <input type="text" class="form-control date-picker" id="endDate" name="end_date" placeholder="dd-mm-yyyy" value="<?php echo format_date_input($_GET['end_date'] ?? ''); ?>" required>
                 </div>
                 <div class="col-md-4 mb-3">
                     <label for="reportType" class="form-label"><i class="bi bi-file-earmark-bar-graph"></i> Jenis Laporan</label>

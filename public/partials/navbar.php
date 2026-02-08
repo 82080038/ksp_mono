@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/../../app/helpers.php'; ?>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
         <a class="navbar-brand" href="/ksp_mono/public/">ksp_mono</a>

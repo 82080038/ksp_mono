@@ -44,7 +44,9 @@ class ResponsiveDataService {
         // Validate table and column names
         $validColumns = [
             'anggota' => ['id', 'user_id', 'status_keanggotaan', 'nomor_anggota', 'joined_at', 'updated_at'],
-            'transactions' => ['id', 'tanggal', 'jumlah', 'jenis']
+            'transactions' => ['id', 'tanggal', 'jumlah', 'jenis'],
+            'jurnal' => ['id', 'entry_date', 'description', 'reference_number', 'status', 'posted_by', 'posted_at', 'created_at'],
+            'log_audit' => ['id', 'table_name', 'record_id', 'field_name', 'old_value', 'new_value', 'user_id', 'action', 'details', 'ip_address', 'user_agent', 'created_at']
         ];
         
         if (!isset($validColumns[$table])) {

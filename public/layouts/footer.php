@@ -78,6 +78,31 @@
         </div>
     </div>
 
+    <!-- Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">
+                        <i class="bi bi-exclamation-triangle text-warning me-2"></i>Konfirmasi Logout
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">Apakah Anda yakin ingin keluar dari sistem?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i>Batal
+                    </button>
+                    <a href="/ksp_mono/logout.php" class="btn btn-danger">
+                        <i class="bi bi-box-arrow-right me-1"></i>Ya, Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
@@ -143,6 +168,11 @@
             });
         });
         
+        // Global function for navigation highlighting
+        function highlightActiveNav() {
+            // Function to highlight active navigation - already handled in PHP
+        }
+        
         // Initialize sidebar functionality
         function initSidebar() {
             const sidebar = document.querySelector('.sidebar');
@@ -205,7 +235,7 @@
         // Navbar: toggler & dropdown (dengan fallback bila Bootstrap JS tidak aktif)
         function initNavbar() {
             const toggler = document.querySelector('.navbar-toggler');
-            const collapseEl = document.getElementById('navbarNav');
+            const collapseEl = document.getElementById('topNavbar');
             const dropdownToggles = document.querySelectorAll('[data-bs-toggle="dropdown"]');
             if (!toggler || !collapseEl) return;
 
@@ -471,5 +501,13 @@
             return prefix + formatter.format(numeric);
         }
     </script>
+    
+    <!-- Debug: Session Data Display -->
+    <?php if (isset($_SESSION) && !empty($_SESSION)): ?>
+    <div style="position: fixed; bottom: 0; left: 0; right: 0; background: #f8f9fa; border-top: 1px solid #dee2e6; padding: 10px; font-size: 12px; max-height: 200px; overflow-y: auto; z-index: 9999;">
+        <strong>Session Data (JSON):</strong>
+        <pre><?php echo json_encode($_SESSION, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE); ?></pre>
+    </div>
+    <?php endif; ?>
 </body>
 </html>

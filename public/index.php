@@ -15,8 +15,10 @@ if ($auth->check()) {
     $modul = isset($_GET['modul']) ? $_GET['modul'] : 'dashboard';
     $action = isset($_GET['action']) ? $_GET['action'] : 'index';
     
-    // Daftar modul yang valid
-    $validModuls = ['anggota', 'simpanan', 'pinjaman', 'laporan', 'pengaturan', 'dashboard', 'coop_details'];
+    // Daftar modul yang valid - dinamis dari database
+    $db = Database::conn();
+    $moduls = $db->query('SELECT nama FROM modul WHERE is_active = 1')->fetchAll(PDO::FETCH_COLUMN);
+    $validModuls = $moduls;
     
     // Jika modul tidak valid, gunakan dashboard sebagai default
     if (!in_array($modul, $validModuls)) {
@@ -43,13 +45,42 @@ if ($auth->check()) {
     // Include navbar
     include __DIR__ . '/partials/navbar.php';
     
-    // Include sidebar
-    include __DIR__ . '/partials/sidebar.php';
+    // Main layout with sidebar and content
+    echo '<div class="container-fluid main-content">';
+    echo '<div class="row">';
     
-    // Tampilkan konten halaman
+    // Sidebar column
+    echo '<div class="col-md-3 col-lg-2 px-0">';
+    include __DIR__ . '/partials/sidebar.php';
+    echo '</div>';
+    
+    // Content column
+    echo '<div class="col-md-9 col-lg-10">';
     echo '<main class="content">';
     include $filePath;
     echo '</main>';
+    echo '</div>';
+    
+    echo '</div>';
+    echo '</div>';
+    
+    // Debug Session Data (Admin Only)
+    if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'admin') {
+        echo '<div class="mt-5 p-3 bg-light border rounded">';
+        echo '<h6 class="mb-3">Debug: Session Data (Admin Only)</h6>';
+        $debug = [];
+        foreach ($_SESSION as $k => $v) {
+            if (is_array($v)) {
+                $debug[$k] = count($v) . ' items';
+            } elseif (is_object($v)) {
+                $debug[$k] = 'object';
+            } else {
+                $debug[$k] = $v;
+            }
+        }
+        echo '<pre class="small">' . print_r($debug, true) . '</pre>';
+        echo '</div>';
+    }
     
     // Include footer
     include __DIR__ . '/layouts/footer.php';

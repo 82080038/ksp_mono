@@ -25,7 +25,7 @@ function generateReport() {
     const formData = $('#financialReportForm').serialize();
     
     $.ajax({
-        url: '/ksp_mono/api/laporan.php?action=financial',
+        url: '../api/laporan.php?action=financial',
         type: 'POST',
         data: formData,
         dataType: 'json',

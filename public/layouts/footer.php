@@ -136,7 +136,6 @@
                 initForms();
                 initToasts();
                 initAjaxForms();
-                initDarkModeToggle();
                 initNavbar();
 
                 // Add active class to current nav item
@@ -158,10 +157,6 @@
                     document.body.classList.toggle('sidebar-collapsed');
                     sidebar.classList.toggle('show');
                     sidebarOverlay.classList.toggle('show');
-                    
-                    // Save sidebar state in localStorage
-                    const isCollapsed = document.body.classList.contains('sidebar-collapsed');
-                    localStorage.setItem('sidebarCollapsed', isCollapsed);
                 });
             }
             
@@ -171,7 +166,6 @@
                     document.body.classList.add('sidebar-collapsed');
                     sidebar.classList.remove('show');
                     this.classList.remove('show');
-                    localStorage.setItem('sidebarCollapsed', true);
                 });
             }
             
@@ -206,11 +200,6 @@
                     });
                 }
             });
-            
-            // Apply saved sidebar state
-            if (localStorage.getItem('sidebarCollapsed') === 'true') {
-                document.body.classList.add('sidebar-collapsed');
-            }
         }
 
         // Navbar: toggler & dropdown (dengan fallback bila Bootstrap JS tidak aktif)
@@ -399,63 +388,6 @@
                 showLoading(false);
             }
         }
-        
-        // Initialize dark mode toggle
-        function initDarkModeToggle() {
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-            
-            // Check for saved user preference or system preference
-            const savedTheme = localStorage.getItem('theme');
-            const systemPrefersDark = prefersDarkScheme.matches;
-            
-            if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-                document.documentElement.setAttribute('data-bs-theme', 'dark');
-                if (darkModeToggle) darkModeToggle.checked = true;
-            }
-            
-            // Toggle dark mode
-            if (darkModeToggle) {
-                darkModeToggle.addEventListener('change', function() {
-                    if (this.checked) {
-                        document.documentElement.setAttribute('data-bs-theme', 'dark');
-                        localStorage.setItem('theme', 'dark');
-                    } else {
-                        document.documentElement.setAttribute('data-bs-theme', 'light');
-                        localStorage.setItem('theme', 'light');
-                    }
-                });
-            }
-            
-            // Listen for system theme changes
-            prefersDarkScheme.addEventListener('change', e => {
-                if (!localStorage.getItem('theme')) {
-                    document.documentElement.setAttribute('data-bs-theme', e.matches ? 'dark' : 'light');
-                }
-            });
-        }
-        
-        // Highlight active navigation item
-        function highlightActiveNav() {
-            const currentPath = window.location.pathname;
-            const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
-            
-            navLinks.forEach(link => {
-                const linkPath = link.getAttribute('href');
-                if (linkPath && currentPath.includes(linkPath) && linkPath !== '/') {
-                    link.classList.add('active');
-                    
-                    // Expand parent menu if exists
-                    const parentMenu = link.closest('.has-submenu');
-                    if (parentMenu) {
-                        parentMenu.classList.add('show');
-                        const submenu = parentMenu.querySelector('.submenu');
-                        if (submenu) submenu.style.maxHeight = submenu.scrollHeight + 'px';
-                    }
-                }
-            });
-        }
-        
         
         // Show toast notification
         function showToast(type, message, options = {}) {

@@ -316,9 +316,46 @@ All validation tests passing (standard and edge cases):
    - Media queries for custom adjustments
    - Touch-friendly controls
 
+### **16. Performance Monitoring System**
+
+1. **Implementation**:
+   - Form submission timing logs
+   - Log rotation script
+   - Performance baseline metrics
+
+2. **Log Rotation**:
+   - Daily cron job
+   - 1MB max file size
+   - Archived logs preserved
+
+3. **Technical Notes**:
+   - Log location: /var/www/html/ksp_mono/logs/
+   - Rotation script: scripts/rotate_logs.sh
+   - Monitoring dashboard planned for future
+
 ---
 
-## 🗃️ **Struktur Database**
+## 📋 **Validation Upgrade Process**
+
+1. **Current Implementation**:
+   - Uses `validation_constants.php`
+   - Easy switch between dev/prod rules
+   - Centralized configuration
+
+2. **Upgrade Steps**:
+   1. Update constants in validation_constants.php
+   2. Remove DEV_MODE flag
+   3. Update complexity requirements
+   4. Test thoroughly
+
+3. **Technical Notes**:
+   - All forms reference same constants
+   - Consistent validation messages
+   - Easy to modify requirements
+
+---
+
+## 🗂️ **Struktur Database**
 
 ### **Tabel Utama**
 ```sql
@@ -548,5 +585,22 @@ Untuk pertanyaan lebih lanjut atau troubleshooting, lihat:
    - Permissions checked in controllers/views
    - Session cache invalidated on role changes
    - New permissions can be added via migrations
+
+### **Unique Field Validation Rules**
+
+1. **Username Requirements**:
+   - Must be unique across system
+   - Minimum 4 characters
+   - No special characters except underscore
+
+2. **Phone Number Requirements**:
+   - Must be unique across system
+   - Indonesian format (08XX-XXXX-XXXX)
+   - Server-side formatting validation
+
+3. **Implementation Notes**:
+   - Checks performed during registration
+   - Client-side hints provided
+   - Server-side enforcement critical
 
 **Paket transfer pengetahuan ini memastikan development dapat dilanjutkan dengan lancar di komputer lain dengan semua konteks dan konfigurasi yang diperlukan.** 🎯📚

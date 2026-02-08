@@ -42,6 +42,7 @@ $redirectUrl = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) : 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login - ksp_mono</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <style>
         body {
             min-height: 100vh;
@@ -81,55 +82,111 @@ $redirectUrl = isset($_GET['redirect']) ? htmlspecialchars($_GET['redirect']) : 
         }
     </style>
 </head>
-<body>
-<div class="card auth-card">
-    <div class="brand-banner">
-        <h5>KSP-Peb</h5>
-        <span>Portal Internal Koperasi</span>
-    </div>
-    <div class="card-body p-4">
-        <h5 class="mb-3">Masuk</h5>
-        <p class="text-muted small">Gunakan akun internal untuk melanjutkan.</p>
-        <form id="loginForm" action="/ksp_mono/login_action.php<?php echo $redirectUrl ? '?redirect=' . urlencode($redirectUrl) : ''; ?>" method="post" novalidate>
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" name="username" id="usernameInput" required placeholder="Username">
-                <div class="invalid-feedback">Username wajib diisi</div>
-                <label for="usernameInput"><i class="bi bi-person"></i> Username</label>
+<body class="bg-light">
+<div class="container d-flex justify-content-center align-items-center min-vh-100 p-4">
+    <div class="card shadow-sm" style="max-width: 420px;">
+        <div class="card-header bg-primary text-white text-center">
+            <h5 class="mb-0">Aplikasi Koperasi</h5>
+            <small>Portal Internal Koperasi</small>
+        </div>
+        <div class="card-body p-4">
+            <h5 class="mb-3">Masuk</h5>
+            <p class="text-muted small">Gunakan akun internal untuk melanjutkan.</p>
+            <form id="loginForm" action="/ksp_mono/login_action.php<?php echo $redirectUrl ? '?redirect=' . urlencode($redirectUrl) : ''; ?>" method="post" novalidate>
+                <div class="form-container">
+                    <div class="mb-3">
+                        <label for="usernameInput" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="usernameInput" name="username" required>
+                        <div class="invalid-feedback">Username wajib diisi</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordInput" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="passwordInput" name="password" required>
+                        <div class="invalid-feedback">Password wajib diisi</div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </button>
+                    </div>
+                </div>
+                <div id="loginError" class="alert alert-danger mt-3 d-none"></div>
+            </form>
+            <div class="mt-3 d-flex flex-column gap-2">
+                <a class="text-decoration-none" href="/ksp_mono/register_koperasi.php">Daftarkan Koperasi Baru</a>
+                <a class="text-decoration-none" href="/ksp_mono/register_user.php">Registrasi Admin/User (pilih koperasi)</a>
             </div>
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control" name="password" id="passwordInput" required placeholder="Password">
-                <div class="invalid-feedback">Password wajib diisi</div>
-                <label for="passwordInput"><i class="bi bi-lock"></i> Password</label>
-            </div>
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-box-arrow-in-right"></i> Login</button>
-            </div>
-            <div id="loginError" class="alert alert-danger mt-3 d-none"></div>
-        </form>
-        <script>
-        // Login form validation
-        $('#loginForm').on('submit', function(e) {
-            const form = this;
-            if (!form.checkValidity()) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            
-            $(form).addClass('was-validated');
-        });
-        
-        // Handle login errors
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('error')) {
-            $('#loginError').text(decodeURIComponent(urlParams.get('error'))).removeClass('d-none');
-        }
-        </script>
-        <div class="mt-3 d-flex flex-column gap-2">
-            <a class="text-decoration-none" href="/ksp_mono/register_koperasi.php">Daftarkan Koperasi Baru</a>
-            <a class="text-decoration-none" href="/ksp_mono/register_user.php">Registrasi Admin/User (pilih koperasi)</a>
         </div>
     </div>
 </div>
+
+<!-- Role Selection Modal -->
+<div class="modal fade" id="roleSelectionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pilih Peran</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Anda memiliki multiple peran, silakan pilih:</p>
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-primary" data-role="admin">Masuk sebagai Admin</button>
+                    <button type="button" class="btn btn-secondary" data-role="anggota">Masuk sebagai Anggota</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // Login form validation
+    $('#loginForm').on('submit', function(e) {
+        const form = this;
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        $(form).addClass('was-validated');
+    });
+    
+    // Handle login errors
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('error')) {
+        $('#loginError').text(decodeURIComponent(urlParams.get('error'))).removeClass('d-none');
+    }
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    // Handle login response
+    $('#loginForm').on('ajax:success', function(e, data) {
+        if (data.role_choice_needed) {
+            // Show role selection modal
+            $('#roleSelectionModal').modal('show');
+            
+            // Handle role selection
+            $('.btn-role').on('click', function() {
+                const selectedRole = $(this).data('role');
+                $.post('/ksp_mono/login_action.php', {
+                    action: 'set_role',
+                    role: selectedRole
+                }, function(response) {
+                    window.location.href = response.redirect || '/dashboard.php';
+                });
+            });
+        } else {
+            // Normal redirect
+            window.location.href = data.redirect || '/dashboard.php';
+        }
+    });
+});
+</script>
 </body>
 </html>

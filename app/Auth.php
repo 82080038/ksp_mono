@@ -32,12 +32,32 @@ class Auth
 
     public function check(): bool
     {
-        return isset($_SESSION['user']);
+        // Check both old session format and new registration session format
+        return isset($_SESSION['user']) || (isset($_SESSION['user_id']) && isset($_SESSION['username']));
     }
 
     public function user(): ?array
     {
-        return $_SESSION['user'] ?? null;
+        // Return user data from session (either login or registration)
+        if (isset($_SESSION['user'])) {
+            return $_SESSION['user'];
+        }
+        
+        // Fallback to registration session
+        if (isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
+            return [
+                'id' => $_SESSION['user_id'],
+                'username' => $_SESSION['username'],
+                'nama_lengkap' => $_SESSION['nama_lengkap'] ?? '',
+                'hp' => $_SESSION['hp'] ?? '',
+                'role' => $_SESSION['role'] ?? 'admin',
+                'role_id' => $_SESSION['role_id'] ?? 2,
+                'permissions' => $_SESSION['permissions'] ?? [],
+                'status' => 'active'
+            ];
+        }
+        
+        return null;
     }
 
     public function logout(): void

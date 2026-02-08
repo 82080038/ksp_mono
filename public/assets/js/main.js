@@ -363,39 +363,14 @@ document.addEventListener('DOMContentLoaded', function() {
     $(document).ready(function() {
         console.log('Initializing global form field helpers...');
         
+        // Initialize phone fields
         $('.phone-field').each(function() {
             console.log('Initializing phone field:', $(this).attr('id'));
-            initPhoneField('#' + $(this).attr('id'));
+            // Phone field initialization will be handled by the form's inline script
         });
 
-        $('.badan-hukum-field').each(function() {
-            console.log('Initializing badan hukum field:', $(this).attr('name'));
-            initBadanHukumField('[name="' + $(this).attr('name') + '"]');
-        });
-        
-        $('.date-field').each(function() {
-            console.log('Initializing date field:', $(this).attr('id'));
-            initDateField('#' + $(this).attr('id'));
-        });
-        
-        $('.currency-field').each(function() {
-            console.log('Initializing currency field:', $(this).attr('id'));
-            initCurrencyField('#' + $(this).attr('id'));
-        });
-        
-        $('.npwp-field').each(function() {
-            console.log('Initializing NPWP field:', $(this).attr('name'));
-            initNpwpField('[name="' + $(this).attr('name') + '"]');
-        });
-
-        // Auto-capitalize road and house number inputs
-        $('#namaJalanInput, #nomorRumahInput').on('input', function() {
-            let value = $(this).val();
-            value = value.replace(/\b\w/g, function(char) {
-                return char.toUpperCase();
-            });
-            $(this).val(value);
-        });
+        // Initialize other form fields as needed
+        console.log('Global form field helpers initialized');
     });
 
     // Fungsi untuk format mata uang Rupiah

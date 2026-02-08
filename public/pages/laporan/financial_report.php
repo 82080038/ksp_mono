@@ -4,35 +4,27 @@
     </div>
     <div class="card-body">
         <form id="financialReportForm">
-            <!-- Date Range -->
-            <div class="row g-3 mb-3">
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <input type="date" class="form-control" name="start_date" id="startDate" required>
-                        <label for="startDate">Tanggal Mulai</label>
-                    </div>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="startDate" class="form-label"><i class="bi bi-calendar"></i> Tanggal Mulai</label>
+                    <input type="date" class="form-control" name="start_date" id="startDate" required>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <input type="date" class="form-control" name="end_date" id="endDate" required>
-                        <label for="endDate">Tanggal Selesai</label>
-                    </div>
+                <div class="col-md-4 mb-3">
+                    <label for="endDate" class="form-label"><i class="bi bi-calendar-check"></i> Tanggal Selesai</label>
+                    <input type="date" class="form-control" name="end_date" id="endDate" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="reportType" class="form-label"><i class="bi bi-file-earmark-bar-graph"></i> Jenis Laporan</label>
+                    <select class="form-select" name="report_type" id="reportType" required>
+                        <option value="income">Laporan Pendapatan</option>
+                        <option value="expense">Laporan Pengeluaran</option>
+                        <option value="all">Laporan Lengkap</option>
+                    </select>
                 </div>
             </div>
-            
-            <!-- Report Type -->
-            <div class="form-floating mb-3">
-                <select class="form-select" name="report_type" id="reportType" required>
-                    <option value="income">Laporan Pendapatan</option>
-                    <option value="expense">Laporan Pengeluaran</option>
-                    <option value="all">Laporan Lengkap</option>
-                </select>
-                <label for="reportType">Jenis Laporan</label>
-            </div>
-            
-            <!-- Submit Button -->
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary btn-lg">
+
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">
                     <i class="bi bi-file-earmark-text"></i> Generate Laporan
                 </button>
             </div>

@@ -1,12 +1,13 @@
 <?php
 // Bootstrap aplikasi sederhana
 
+// Load configuration
+require_once __DIR__ . '/../config/config.php';
+
 // Mulai session lebih awal
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
-$config = require __DIR__ . '/../config/config.php';
 
 // Pengaturan error sesuai environment
 if (($config['app']['env'] ?? 'production') === 'development' && ($config['app']['debug'] ?? false)) {
@@ -18,9 +19,13 @@ if (($config['app']['env'] ?? 'production') === 'development' && ($config['app']
     error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
 }
 
-require_once __DIR__ . '/Database.php';
-require_once __DIR__ . '/Auth.php';
-require_once __DIR__ . '/Address.php';
+// Autoload classes
+spl_autoload_register(function ($class) {
+    $file = __DIR__ . '/' . str_replace('\\', '/', $class) . '.php';
+    if (file_exists($file)) {
+        require $file;
+    }
+});
 
 // Helper untuk akses config
 function app_config(string $key, $default = null) {

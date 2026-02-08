@@ -4,7 +4,7 @@ $(document).ready(function() {
     const $form = $('#loanApplicationForm');
     
     // Load member options
-    $.getJSON('/ksp_mono/api/anggota.php?action=list')
+    $.getJSON('../api/anggota.php?action=list')
         .done(function(data) {
             if (data.success) {
                 const $select = $('#anggotaSelect');
@@ -46,7 +46,7 @@ function submitLoanApplication() {
     const formData = $('#loanApplicationForm').serialize();
     
     $.ajax({
-        url: '/ksp_mono/api/pinjaman.php?action=create',
+        url: '../api/pinjaman.php?action=create',
         type: 'POST',
         data: formData,
         dataType: 'json',

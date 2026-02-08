@@ -26,6 +26,7 @@ if ($username === '' || $password === '') {
 try {
     $auth = new Auth();
     if ($auth->login($username, $password)) {
+        $userRoles = $auth->getUserRoles($username);
         // Setelah login berhasil, tentukan URL redirect
         $redirectUrl = '/ksp_mono/';
         
@@ -43,11 +44,29 @@ try {
             }
         }
         
-        echo json_encode([
-            'success' => true, 
-            'redirect' => $redirectUrl,
-            'message' => 'Login berhasil. Mengalihkan...'
-        ]);
+        // Handle role selection
+        if (isset($_POST['action']) && $_POST['action'] === 'set_role') {
+            $_SESSION['current_role'] = $_POST['role'];
+            echo json_encode(['success' => true, 'redirect' => '/dashboard.php']);
+            exit;
+        }
+
+        if (count($userRoles) > 1) {
+            $_SESSION['role_choice_needed'] = true;
+            $_SESSION['available_roles'] = $userRoles;
+            echo json_encode([
+                'success' => true, 
+                'role_choice_needed' => true,
+                'roles' => array_values($userRoles)
+            ]);
+            exit;
+        } else {
+            echo json_encode([
+                'success' => true, 
+                'redirect' => $redirectUrl,
+                'message' => 'Login berhasil. Mengalihkan...'
+            ]);
+        }
     } else {
         echo json_encode([
             'success' => false, 

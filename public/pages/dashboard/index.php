@@ -1,11 +1,44 @@
 <?php
 require_once __DIR__ . '/../../../app/bootstrap.php';
+require_once __DIR__ . '/../../../app/helpers.php';
+require_once __DIR__ . '/../../../app/ResponsiveDataService.php';
+
+// Use Auth class for authentication
 $auth = new Auth();
 if (!$auth->check()) {
     header('Location: /ksp_mono/public/login.php');
     exit;
 }
 $user = $auth->user() ?: [];
+
+// Set item limits based on device type
+$itemLimits = [
+    'mobile' => [
+        'transactions' => 5,
+        'notifications' => 3
+    ],
+    'tablet' => [
+        'transactions' => 8,
+        'notifications' => 5
+    ],
+    'desktop' => [
+        'transactions' => 15,
+        'notifications' => 10
+    ]
+];
+
+$deviceType = get_device_type();
+$limits = $itemLimits[$deviceType];
+
+// Load data with device-specific limits
+$transactions = ResponsiveDataService::getData('transactions', [
+    'order' => 'date DESC'
+]);
+
+$notifications = ResponsiveDataService::getData('notifications', [
+    'order' => 'created_at DESC',
+    'where' => "user_id = {$_SESSION['user_id']}"
+]);
 ?>
 
 <div class="container py-4">
@@ -234,13 +267,15 @@ $user = $auth->user() ?: [];
                                     <th>Oleh</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="transactions-table-body">
+                                <?php foreach ($transactions as $transaction) { ?>
                                 <tr>
-                                    <td class="text-nowrap"><?php echo date('d M Y H:i'); ?></td>
-                                    <td>Login</td>
-                                    <td>Anda berhasil login ke sistem</td>
-                                    <td class="text-nowrap"><?php echo isset($user['username']) ? htmlspecialchars($user['username']) : 'System'; ?></td>
+                                    <td class="text-nowrap"><?php echo $transaction['date']; ?></td>
+                                    <td><?php echo $transaction['activity']; ?></td>
+                                    <td><?php echo $transaction['description']; ?></td>
+                                    <td class="text-nowrap"><?php echo $transaction['user']; ?></td>
                                 </tr>
+                                <?php } ?>
                             </tbody>
                         </table>
                     </div>
@@ -249,3 +284,46 @@ $user = $auth->user() ?: [];
         </div>
     </div>
 </div>
+
+<script>
+    let loading = false;
+    let offset = <?php echo $limits['transactions']; ?>;
+
+    async function loadMoreTransactions() {
+        if (loading) return;
+        loading = true;
+        
+        try {
+            const response = await fetch(`/api/load_more.php?offset=${offset}`);
+            const data = await response.json();
+            
+            if (data.success && data.data.length) {
+                const tableBody = document.getElementById('transactions-table-body');
+                data.data.forEach(transaction => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="text-nowrap">${transaction.date}</td>
+                        <td>${transaction.activity}</td>
+                        <td>${transaction.description}</td>
+                        <td class="text-nowrap">${transaction.user}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+                offset += data.data.length;
+            }
+        } catch (error) {
+            console.error('Error loading more transactions:', error);
+        } finally {
+            loading = false;
+        }
+    }
+
+    // Load more data when scrolling on mobile
+    if (get_device_type() === 'mobile') {
+        window.addEventListener('scroll', function() {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+                loadMoreTransactions();
+            }
+        });
+    }
+</script>

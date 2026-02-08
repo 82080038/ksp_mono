@@ -4,35 +4,29 @@
     </div>
     <div class="card-body">
         <form id="loanApplicationForm">
-            <!-- Member Selection -->
-            <div class="form-floating mb-3">
-                <select class="form-select" name="anggota_id" id="anggotaSelect" required>
-                    <option value="">-- Pilih Anggota --</option>
-                    <!-- Options will be loaded via JavaScript -->
-                </select>
-                <label for="anggotaSelect"><i class="bi bi-person"></i> Anggota</label>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="anggotaSelect" class="form-label"><i class="bi bi-person"></i> Anggota</label>
+                    <select class="form-select" name="anggota_id" id="anggotaSelect" required>
+                        <option value="">-- Pilih Anggota --</option>
+                        <!-- Options will be loaded via JavaScript -->
+                    </select>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="loanAmount" class="form-label"><i class="bi bi-cash"></i> Jumlah Pinjaman</label>
+                    <input type="number" class="form-control" name="amount" id="loanAmount" min="100000" step="50000" required>
+                    <small class="text-muted">Minimal Rp 100,000</small>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="loanTerm" class="form-label"><i class="bi bi-calendar"></i> Jangka Waktu</label>
+                    <input type="number" class="form-control" name="term_months" id="loanTerm" min="1" max="36" required placeholder="bulan">
+                    <small class="text-muted">1-36 bulan</small>
+                </div>
             </div>
-            
-            <!-- Loan Amount -->
-            <div class="form-floating mb-3">
-                <input type="number" class="form-control" name="amount" id="loanAmount" 
-                    min="100000" step="50000" required placeholder="Jumlah Pinjaman">
-                <small class="text-muted d-block mt-1">Minimal Rp 100,000</small>
-                <label for="loanAmount"><i class="bi bi-currency-exchange"></i> Jumlah Pinjaman</label>
-            </div>
-            
-            <!-- Loan Term -->
-            <div class="form-floating mb-3">
-                <input type="number" class="form-control" name="term_months" id="loanTerm" 
-                    min="1" max="36" required placeholder="Jangka Waktu (bulan)">
-                <small class="text-muted d-block mt-1">1-36 bulan</small>
-                <label for="loanTerm"><i class="bi bi-calendar"></i> Jangka Waktu (bulan)</label>
-            </div>
-            
-            <!-- Submit Button -->
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary btn-lg">
-                    <i class="bi bi-send-check"></i> Ajukan Pinjaman
+
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-file-earmark-text"></i> Ajukan Pinjaman
                 </button>
             </div>
         </form>

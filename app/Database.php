@@ -3,17 +3,28 @@ class Database
 {
     private static ?PDO $pdo = null;
 
-    public static function conn(): PDO
-    {
-        if (self::$pdo === null) {
-            $cfg = app_config('db');
-            $dsn = sprintf('mysql:host=%s;dbname=%s;charset=%s', $cfg['host'], $cfg['name'], $cfg['charset']);
-            self::$pdo = new PDO($dsn, $cfg['user'], $cfg['pass'], [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false,
-            ]);
+    public static function conn($dbName = 'koperasi_db') {
+        global $config;
+        
+        if (!isset($config[$dbName])) {
+            throw new Exception("Database configuration not found for {$dbName}");
         }
-        return self::$pdo;
+        
+        $dbConfig = $config[$dbName];
+        
+        $dsn = "mysql:host={$dbConfig['host']};dbname={$dbConfig['name']}";
+        if (isset($dbConfig['charset'])) {
+            $dsn .= ";charset={$dbConfig['charset']}";
+        }
+        
+        return new PDO(
+            $dsn,
+            $dbConfig['user'],
+            $dbConfig['pass'],
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+            ]
+        );
     }
 }

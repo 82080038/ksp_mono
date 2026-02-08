@@ -6,7 +6,6 @@
   "start_url": "/ksp_mono/public/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#4361ee",
   "orientation": "portrait",
   "icons": [
     {

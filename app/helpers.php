@@ -5,6 +5,15 @@
  */
 
 /**
+ * Format text to uppercase (consistent with Indonesian business naming)
+ * @param string $text Input text
+ * @return string Uppercase formatted text
+ */
+function format_uppercase($text) {
+    return strtoupper(trim($text));
+}
+
+/**
  * Format Indonesian phone number with masking
  * @param string $phone Phone number
  * @param bool $with_mask Whether to return with mask
@@ -439,6 +448,24 @@ function has_permission($permission) {
     $_SESSION['permissions'] = $user_permissions; // Cache in session
     
     return in_array($permission, $user_permissions);
+}
+
+/**
+ * Device Detection Helper Function
+ */
+
+/**
+ * Get device type (mobile, tablet, or desktop)
+ * @return string Device type
+ */
+function get_device_type() {
+    $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+    
+    if (preg_match('/(Mobile|Android|iPhone|iPod|iPad|BlackBerry)/i', $userAgent)) {
+        return (preg_match('/(Tablet|iPad)/i', $userAgent)) ? 'tablet' : 'mobile';
+    }
+    
+    return 'desktop';
 }
 
 ?>

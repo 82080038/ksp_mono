@@ -24,36 +24,44 @@ $coop = $stmt->fetch();
         <form id="completeCoopForm">
             <!-- Badan Hukum Section -->
             <div class="mb-4">
-                <h6 class="text-primary"><i class="bi bi-file-text"></i> Status Badan Hukum</h6>
-                <div class="form-floating mb-3">
-                    <select class="form-select" name="status_badan_hukum" id="statusBadanHukum" required>
-                        <option value="belum_terdaftar" <?= $coop['status_badan_hukum'] === 'belum_terdaftar' ? 'selected' : '' ?>>Belum Terdaftar</option>
-                        <option value="terdaftar" <?= $coop['status_badan_hukum'] === 'terdaftar' ? 'selected' : '' ?>>Terdaftar</option>
-                        <option value="badan_hukum" <?= $coop['status_badan_hukum'] === 'badan_hukum' ? 'selected' : '' ?>>Badan Hukum</option>
-                    </select>
-                    <label>Status Badan Hukum</label>
-                </div>
-                <div class="form-floating mb-3" id="nomorBadanHukumContainer" style="display:<?= in_array($coop['status_badan_hukum'], ['terdaftar', 'badan_hukum']) ? 'block' : 'none' ?>">
-                    <input type="text" class="form-control" name="nomor_badan_hukum" id="nomorBadanHukum" 
-                        pattern="\d{12}" title="Nomor Badan Hukum harus 12 digit angka"
-                        value="<?= htmlspecialchars($coop['nomor_badan_hukum'] ?? '') ?>">
-                    <small class="text-muted d-block mt-1">12 digit angka (diisi jika status Terdaftar/Badan Hukum)</small>
-                    <label>Nomor Badan Hukum</label>
+                <h6 class="text-primary mb-3"><i class="bi bi-file-text"></i> Status Badan Hukum</h6>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="statusBadanHukum" class="form-label"><i class="bi bi-file-earmark-check"></i> Status Badan Hukum</label>
+                        <select class="form-select" name="status_badan_hukum" id="statusBadanHukum" required>
+                            <option value="belum_terdaftar" <?= $coop['status_badan_hukum'] === 'belum_terdaftar' ? 'selected' : '' ?>>Belum Terdaftar</option>
+                            <option value="terdaftar" <?= $coop['status_badan_hukum'] === 'terdaftar' ? 'selected' : '' ?>>Terdaftar</option>
+                            <option value="badan_hukum" <?= $coop['status_badan_hukum'] === 'badan_hukum' ? 'selected' : '' ?>>Badan Hukum</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3" id="nomorBadanHukumContainer" style="display:<?= in_array($coop['status_badan_hukum'], ['terdaftar', 'badan_hukum']) ? 'block' : 'none' ?>">
+                        <label for="nomorBadanHukum" class="form-label"><i class="bi bi-hash"></i> Nomor Badan Hukum</label>
+                        <input type="text" class="form-control" name="nomor_badan_hukum" id="nomorBadanHukum" 
+                            pattern="\d{12}" title="Nomor Badan Hukum harus 12 digit angka"
+                            value="<?= htmlspecialchars($coop['nomor_badan_hukum'] ?? '') ?>">
+                        <small class="text-muted">12 digit angka (diisi jika status Terdaftar/Badan Hukum)</small>
+                    </div>
                 </div>
             </div>
 
-            <!-- Other moved fields -->
+            <!-- Contact Section -->
             <div class="mb-4">
-                <h6 class="text-primary"><i class="bi bi-telephone"></i> Kontak Resmi</h6>
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control phone-field" name="kontak" id="kontakField" 
-                        required value="<?= htmlspecialchars($coop['kontak'] ?? '') ?>">
-                    <small class="text-muted d-block mt-1">Format: 08XX-XXXX-XXXX</small>
-                    <label><i class="bi bi-phone"></i> Kontak</label>
+                <h6 class="text-primary mb-3"><i class="bi bi-telephone"></i> Kontak Resmi</h6>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="kontakField" class="form-label"><i class="bi bi-phone"></i> Kontak</label>
+                        <input type="text" class="form-control phone-field" name="kontak" id="kontakField" 
+                            required value="<?= htmlspecialchars($coop['kontak'] ?? '') ?>">
+                        <small class="text-muted">Format: 08XX-XXXX-XXXX</small>
+                    </div>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Simpan Detail</button>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle"></i> Simpan Detail
+                </button>
+            </div>
         </form>
     </div>
 </div>

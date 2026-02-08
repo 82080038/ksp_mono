@@ -1,4 +1,7 @@
 <?php
+// Start timing
+$startTime = microtime(true);
+
 require_once __DIR__ . '/../../app/bootstrap.php';
 header('Content-Type: application/json');
 $auth = new Auth();
@@ -49,3 +52,16 @@ try {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => $e->getMessage() ?: 'Kesalahan server']);
 }
+
+// Ensure logs directory exists
+if (!file_exists('/var/www/html/ksp_mono/logs')) {
+    mkdir('/var/www/html/ksp_mono/logs', 0755, true);
+}
+
+// Log performance at the end
+$duration = round((microtime(true) - $startTime) * 1000, 2);
+file_put_contents(
+    '/var/www/html/ksp_mono/logs/form_performance.log', 
+    date('Y-m-d H:i:s') . " | simpanan | {$duration}ms\n", 
+    FILE_APPEND
+);

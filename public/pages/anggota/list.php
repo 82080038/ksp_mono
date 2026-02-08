@@ -51,7 +51,9 @@ if (!$auth->check()) {
                     </div>
                     <div class="mb-3">
                         <label for="nama" class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="nama" name="nama" required>
+                        <input type="text" class="form-control" id="nama" name="nama" required 
+                            minlength="<?php echo MIN_NAME_LENGTH; ?>" maxlength="<?php echo MAX_NAME_LENGTH; ?>">
+                        <small class="text-muted">Minimal <?php echo MIN_NAME_LENGTH; ?> karakter, maksimal <?php echo MAX_NAME_LENGTH; ?> karakter</small>
                     </div>
                     <div class="mb-3">
                         <label for="hp" class="form-label">No. HP</label>
@@ -97,7 +99,7 @@ if (!$auth->check()) {
         // Fungsi untuk memuat data anggota
         function loadAnggota() {
             $.ajax({
-                url: '/ksp_mono/api/anggota.php',
+                url: '../../../api/anggota.php',
                 type: 'GET',
                 dataType: 'json',
                 success: function(response) {
@@ -143,7 +145,7 @@ if (!$auth->check()) {
                 e.preventDefault();
                 
                 $.ajax({
-                    url: '/ksp_mono/api/anggota.php',
+                    url: '../../../api/anggota.php',
                     type: 'POST',
                     data: $(this).serialize(),
                     dataType: 'json',
